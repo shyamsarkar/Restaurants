@@ -1,0 +1,44 @@
+name: Rails RSpec Tests
+
+on:
+  pull_request:
+    branches:
+      - main # Change to your main branch name
+
+jobs:
+  rspec:
+    name: Run RSpec Tests
+    runs-on: ubuntu-latest
+
+    services:
+      postgres:
+        image: postgres:13
+        env:
+          POSTGRES_USER: postgres
+          POSTGRES_PASSWORD: postgres
+          POSTGRES_DB: restaurants_test
+
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v2
+
+      - name: Set Up Ruby
+        uses: actions/setup-ruby@v1
+        with:
+          ruby-version: 3.2.2
+
+      - name: Install Dependencies
+        run: |
+          gem install bundler
+          bundle install
+        working-directory: ./backend
+
+      - name: Database Setup
+        run: |
+          bundle exec rails db:create
+          bundle exec rails db:migrate
+        working-directory: ./backend
+
+      - name: Run RSpec Tests
+        run: bundle exec rspec
+        working-directory: ./backend
