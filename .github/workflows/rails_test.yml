@@ -10,6 +10,7 @@ jobs:
     name: Run RSpec Tests
     runs-on: ubuntu-latest
 
+
     services:
       postgres:
         image: postgres:13
@@ -22,6 +23,9 @@ jobs:
       - name: Checkout Repository
         uses: actions/checkout@v2
 
+      - name: cerate env
+        run: cp .env.sample .env
+
       - name: Set Up Ruby
         uses: ruby/setup-ruby@v1
         with:
@@ -32,6 +36,7 @@ jobs:
           gem install bundler
           bundle install
         working-directory: ./backend
+
 
       - name: Database Setup
         run: |
