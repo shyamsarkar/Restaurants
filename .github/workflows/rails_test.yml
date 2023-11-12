@@ -9,29 +9,29 @@ jobs:
   rspec:
     name: Run RSpec Tests
     runs-on: ubuntu-latest
-
     services:
       postgres:
-        image: postgres:13
+        image: postgres:14
+        ports: ['5432:5432']
         env:
+          POSTGRES_DB: restaurants_test
           POSTGRES_USER: postgres
           POSTGRES_PASSWORD: postgres
-          POSTGRES_DB: restaurants_test
 
     steps:
       - name: Checkout Repository
-        uses: ruby/checkout@v2
+        uses: ruby/checkout@v3
 
       - name: Set Up Ruby
         uses: ruby/setup-ruby@v1
         with:
           ruby-version: 3.2.2
+          bundler-cache: true
 
       - name: Install Dependencies
         run: |
           gem install bundler
           bundle install
-        working-directory: ./backend
 
       - name: Database Setup
         run: |
