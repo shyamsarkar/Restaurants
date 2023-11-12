@@ -14,7 +14,7 @@ jobs:
         image: postgres:14
         ports: ['5432:5432']
         env:
-          POSTGRES_DB: restaurants_test
+          POSTGRES_DB: restaurants
           POSTGRES_USER: postgres
           POSTGRES_PASSWORD: postgres
         options: --health-cmd pg_isready --health-interval 10s --health-timeout 5s --health-retries 5
@@ -22,7 +22,10 @@ jobs:
 
     steps:
       - name: Checkout Repository
-        uses: ruby/checkout@v2
+        uses: actions/checkout@v2
+
+      - name: create env
+        run: cp ./backend/.env.sample ./backend/.env
 
       - name: Set Up Ruby
         uses: ruby/setup-ruby@v1
@@ -34,11 +37,12 @@ jobs:
         run: |
           gem install bundler
           bundle install
+        working-directory: ./backend
 
       - name: Database Setup
         run: |
-          bundle exec rails db:create
-          bundle exec rails db:migrate
+          bundle exec rails db:create RAILS_ENV=test
+          bundle exec rails db:migrate RAILS_ENV=test
         working-directory: ./backend
 
       - name: Run RSpec Tests
