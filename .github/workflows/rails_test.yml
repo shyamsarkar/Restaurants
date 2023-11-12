@@ -24,7 +24,7 @@ jobs:
       - name: Checkout Repository
         uses: actions/checkout@v2
 
-      - name: cerate env
+      - name: create env
         run: cp ./backend/.env.sample ./backend/.env
 
       - name: Set Up Ruby
@@ -37,6 +37,7 @@ jobs:
         run: |
           gem install bundler
           bundle install
+        working-directory: ./backend
 
       - name: Database Setup
         run: |
