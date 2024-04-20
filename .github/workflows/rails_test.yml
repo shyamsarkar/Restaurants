@@ -15,10 +15,9 @@ jobs:
         ports: ['5432:5432']
         env:
           POSTGRES_DB: restaurants
-          POSTGRES_USER: postgres
-          POSTGRES_PASSWORD: postgres
+          POSTGRES_USER: ${{ secrets.POSTGRES_USER }}
+          POSTGRES_PASSWORD: ${{ secrets.POSTGRES_PASSWORD }}
         options: --health-cmd pg_isready --health-interval 10s --health-timeout 5s --health-retries 5
-
 
     steps:
       - name: Checkout Repository
@@ -30,13 +29,19 @@ jobs:
       - name: Set Up Ruby
         uses: ruby/setup-ruby@v1
         with:
-          ruby-version: 3.2.2
+          ruby-version: 3.3.0
           bundler-cache: true
 
+      - name: Cache Bundler dependencies
+        uses: actions/cache@v2
+        with:
+          path: vendor/bundle
+          key: ${{ runner.os }}-gems-${{ hashFiles('**/Gemfile.lock') }}
+          restore-keys: |
+            ${{ runner.os }}-gems-
+
       - name: Install Dependencies
-        run: |
-          gem install bundler
-          bundle install
+        run: bundle install
         working-directory: ./backend
 
       - name: Database Setup
