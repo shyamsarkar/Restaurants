@@ -25,3 +25,5 @@ module Backend
     config.api_only = true
   end
 end
+# config/application.rb or config/initializers/session_store.rb
+Rails.application.config.middleware.use Rack::Session::Cookie, secret: Rails.application.secrets.secret_key_base

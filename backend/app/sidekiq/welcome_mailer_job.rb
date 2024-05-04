@@ -1,0 +1,9 @@
+class WelcomeMailerJob
+  include Sidekiq::Job
+  queue_as :welcome_mailer
+
+  def perform(user_id)
+    user = User.find(user_id)
+    UserMailer.welcome_email(user).deliver_later
+  end
+end

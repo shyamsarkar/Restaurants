@@ -5,6 +5,6 @@ class Role < ApplicationRecord
   SUPER_ADMIN = 'super_admin'.freeze
   COMPANY_ADMIN = 'company_admin'.freeze
   BRANCH_ADMIN = 'branch_admin'.freeze
-  EMPLOYEE = 'employee'.freeze
-  ALL_ROLES = [SUPER_ADMIN, COMPANY_ADMIN, BRANCH_ADMIN, EMPLOYEE].freeze
+  END_USER = 'end_user'.freeze
+  ALL_ROLES = [SUPER_ADMIN, COMPANY_ADMIN, BRANCH_ADMIN, END_USER].freeze
 end
