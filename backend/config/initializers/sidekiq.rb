@@ -1,0 +1,10 @@
+# frozen_string_literal: true
+require 'sidekiq'
+
+Sidekiq.configure_server do |config|
+  config.redis = { url: ENV.fetch('REDIS_URL', nil), password: ENV.fetch('REDIS_PASSWORD', nil) }
+end
+
+Sidekiq.configure_client do |config|
+  config.redis = { url: ENV.fetch('REDIS_URL', nil), password: ENV.fetch('REDIS_PASSWORD', nil) }
+end
