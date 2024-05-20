@@ -28,10 +28,10 @@ export default function StickyFooter() {
       >
         <Container maxWidth="sm">
           <Typography variant="body1">
-            My sticky footer can be found here.
+            Keep your business upto date using Restaurant.
           </Typography>
           <Link color="inherit" href="https://mui.com/">
-            Your Website
+            Restaurant by Sarkar
           </Link>
         </Container>
       </Box>
