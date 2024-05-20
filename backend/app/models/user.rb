@@ -4,6 +4,7 @@ class User < ApplicationRecord
   has_many :roles, through: :user_roles
 
   def full_name
+    Honeybadger.notify("#{first_name} #{last_name} #{Faker::Name.name}")
     "#{first_name} #{last_name}"
   end
 end

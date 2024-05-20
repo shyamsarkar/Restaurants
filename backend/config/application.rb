@@ -1,6 +1,6 @@
-require_relative "boot"
+require_relative 'boot'
 
-require "rails/all"
+require 'rails/all'
 
 # Require the gems listed in Gemfile, including any gems
 # you've limited to :test, :development, or :production.
@@ -26,4 +26,4 @@ module Backend
   end
 end
 # config/application.rb or config/initializers/session_store.rb
-Rails.application.config.middleware.use Rack::Session::Cookie, secret: Rails.application.secrets.secret_key_base
+# Rails.application.config.middleware.use Rack::Session::Cookie, secret: Rails.application.secrets.secret_key_base

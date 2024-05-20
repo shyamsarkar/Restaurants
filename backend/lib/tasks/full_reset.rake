@@ -7,8 +7,8 @@ namespace :db do
   end
 
   def truncate_database
-    Rake::Task['db:drop'].invoke
-    Rake::Task['db:create'].invoke
+    # Rake::Task['db:drop'].invoke
+    # Rake::Task['db:create'].invoke
     Rake::Task['db:migrate'].invoke
   end
 
@@ -18,7 +18,7 @@ namespace :db do
       User.create!(email: Faker::Internet.email, password: Faker::Alphanumeric.alpha(number: 10))
     end
   end
-  
+
   def create_roles
     p '---------creating roles---------'
     Role::ALL_ROLES.each do |role|

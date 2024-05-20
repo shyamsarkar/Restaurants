@@ -110,6 +110,7 @@ GEM
       rake
     globalid (1.2.1)
       activesupport (>= 6.1)
+    honeybadger (5.8.1)
     i18n (1.14.4)
       concurrent-ruby (~> 1.0)
     io-console (0.7.2)
@@ -265,6 +266,7 @@ DEPENDENCIES
   debug
   dotenv-rails
   faker
+  honeybadger
   letter_opener
   pg (~> 1.5)
   pry
