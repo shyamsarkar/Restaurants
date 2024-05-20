@@ -1,0 +1,7 @@
+development:
+  api_key: <%= ENV['HONEYBADGER_API_KEY'] %>
+  report_data: true
+
+production:
+  api_key: <%= ENV['HONEYBADGER_API_KEY'] %>
+  report_data: true
