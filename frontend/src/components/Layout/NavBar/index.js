@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { styled, createTheme, ThemeProvider } from "@mui/material/styles";
 import MuiAppBar from "@mui/material/AppBar";
-import bootstrap from "../../assets/bootstrap.module.scss";
+import bootstrap from "../../../assets/bootstrap.module.scss";
 import Toolbar from "@mui/material/Toolbar";
 import IconButton from "@mui/material/IconButton";
 import MenuIcon from "@mui/icons-material/Menu";
@@ -10,20 +10,22 @@ import Box from "@mui/material/Box";
 import Badge from "@mui/material/Badge";
 import NotificationsIcon from "@mui/icons-material/Notifications";
 import Menu from "@mui/material/Menu";
-import Alerts from "../../pages/Dashboard/Alerts";
+import Alerts from "../../../pages/Dashboard/Alerts";
 import Avatar from "@mui/material/Avatar";
 import MenuItem from "@mui/material/MenuItem";
+import { useSelector, useDispatch } from 'react-redux';
 
-function NavBar() {
+const NavBar = () => {
   const drawerWidth = 240;
-  const [hideSidebar, setHideSidebar] = useState(false);
-  const [open, setOpen] = useState(true);
   const [anchorElAlert, setAnchorElAlert] = useState(null);
   const [anchorElUser, setAnchorElUser] = useState(null);
   const settings = ["Profile", "Logout"];
-  
+  const dispatch = useDispatch();
+  const hideSidebar = useSelector((state) => state.sideBar.hideSidebar);
+  const expandSidebar = useSelector((state) => state.sideBar.expandSidebar);
+
   const toggleDrawer = () => {
-    setOpen(!open);
+    dispatch({type: expandSidebar ? 'COLLAPSE_MENU' : 'EXPAND_MENU'})
   };
 
   const handleOpenAlert = (event) => {
@@ -67,7 +69,7 @@ function NavBar() {
       <AppBar
         position="absolute"
         className={`${hideSidebar ? bootstrap.w100 : ""}`}
-        open={open}
+        open={expandSidebar}
       >
         <Toolbar className={`${bootstrap.ps5}`}>
           <IconButton
@@ -75,7 +77,7 @@ function NavBar() {
             color="inherit"
             aria-label="open drawer"
             onClick={toggleDrawer}
-            sx={{ marginRight: "36px", ...open }}
+            sx={{ marginRight: "36px" }}
           >
             <MenuIcon />
           </IconButton>
