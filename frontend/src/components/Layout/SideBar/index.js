@@ -1,17 +1,18 @@
-import React, { useState} from 'react'
+import React, { useState } from 'react'
 import { styled, createTheme, ThemeProvider } from "@mui/material/styles";
 import MuiDrawer from "@mui/material/Drawer";
-import bootstrap from "../../assets/bootstrap.module.scss";
+import bootstrap from "../../../assets/bootstrap.module.scss";
 import Toolbar from "@mui/material/Toolbar";
 import Typography from "@mui/material/Typography";
 import Divider from "@mui/material/Divider";
 import List from "@mui/material/List";
-import { mainListItems } from "../../pages/Dashboard/listItems";
+import { mainListItems } from "../../../pages/Dashboard/listItems";
+import { useSelector } from 'react-redux';
 
 function SideBar() {
   const drawerWidth = 240;
-  const [hideSidebar, setHideSidebar] = useState(false);
-  const [open, setOpen] = useState(true);
+  const hideSidebar = useSelector((state) => state.sideBar.hideSidebar);
+  const expandSidebar = useSelector((state) => state.sideBar.expandSidebar);
 
   const Drawer = styled(MuiDrawer, {
     shouldForwardProp: (prop) => prop !== "open",
@@ -41,10 +42,11 @@ function SideBar() {
 
   return (
     <>
+      {/* SideBar Start */}
       <Drawer
-        className={`${hideSidebar && !open ? bootstrap.dNone : ""}`}
+        className={`${hideSidebar && !expandSidebar ? bootstrap.dNone : ""}`}
         variant="permanent"
-        open={open}
+        open={expandSidebar}
       >
         <Toolbar
           sx={{
@@ -65,6 +67,7 @@ function SideBar() {
         <Divider />
         <List component="nav">{mainListItems}</List>
       </Drawer>
+      {/* SideBar End */}
     </>
   )
 }

@@ -19,23 +19,18 @@ import Avatar from "@mui/material/Avatar";
 import Menu from "@mui/material/Menu";
 import MenuItem from "@mui/material/MenuItem";
 import Alerts from "./Alerts";
-import NavBar from "../../components/NavBar";
 import { Grid } from '@mui/material';
 import Button from '@mui/material/Button';
 import ButtonGroup from '@mui/material/ButtonGroup';
 import FormControl from '@mui/material/FormControl';
-import Select, { SelectChangeEvent } from '@mui/material/Select';
+import Select from '@mui/material/Select';
 import InputLabel from '@mui/material/InputLabel';
 import Paper from '@mui/material/Paper';
 import InputBase from '@mui/material/InputBase';
 import SearchIcon from '@mui/icons-material/Search';
-import DirectionsIcon from '@mui/icons-material/Directions';
 import ListItem from '@mui/material/ListItem';
 import ListItemText from '@mui/material/ListItemText';
 import ListItemAvatar from '@mui/material/ListItemAvatar';
-import ImageIcon from '@mui/icons-material/Image';
-import WorkIcon from '@mui/icons-material/Work';
-import BeachAccessIcon from '@mui/icons-material/BeachAccess';
 import RestaurantIcon from '@mui/icons-material/Restaurant';
 import AddBoxIcon from '@mui/icons-material/AddBox';
 import DeleteIcon from '@mui/icons-material/Delete';
@@ -43,6 +38,7 @@ import EditIcon from '@mui/icons-material/Edit';
 import TextField from '@mui/material/TextField';
 import Snackbar from '@mui/material/Snackbar';
 import CloseIcon from '@mui/icons-material/Close';
+import { useSelector, useDispatch } from 'react-redux';
 
 const drawerWidth = 240;
 const settings = ["Profile", "Logout"];
@@ -95,13 +91,14 @@ const Drawer = styled(MuiDrawer, {
 const defaultTheme = createTheme();
 
 export default function Dashboard() {
-  const [open, setOpen] = useState(true);
+  const expandSidebar = useSelector((state) => state.sideBar.expandSidebar);
   const [openSnacks, setOpenSnacks] = useState(false);
-  const [hideSidebar, setHideSidebar] = useState(false);
+  const hideSidebar = useSelector((state) => state.sideBar.hideSidebar);
   const [itemQuantity, setItemQuantity] = useState(1);
+  const dispatch = useDispatch();
   const itemTypes = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20];
   const toggleDrawer = () => {
-    setOpen(!open);
+    dispatch({type: expandSidebar ? 'COLLAPSE_MENU' : 'EXPAND_MENU'})
   };
   const [anchorElUser, setAnchorElUser] = useState(null);
   const [anchorElAlert, setAnchorElAlert] = useState(null);
@@ -151,11 +148,7 @@ export default function Dashboard() {
 
   useEffect(() => {
     const handleResize = () => {
-      if (window.innerWidth < 600) {
-        setHideSidebar(true);
-      } else {
-        setHideSidebar(false);
-      }
+      dispatch({type: window.innerWidth < 600 ? 'HIDE_MENU' : 'SHOW_MENU'})
     };
 
     window.addEventListener("resize", handleResize);
@@ -173,7 +166,7 @@ export default function Dashboard() {
         <AppBar
           position="absolute"
           className={`${hideSidebar ? bootstrap.w100 : ""}`}
-          open={open}
+          open={expandSidebar}
         >
           <Toolbar className={`${bootstrap.ps5}`}>
             <IconButton
@@ -181,7 +174,7 @@ export default function Dashboard() {
               color="inherit"
               aria-label="open drawer"
               onClick={toggleDrawer}
-              sx={{ marginRight: "36px", ...open }}
+              sx={{ marginRight: "36px" }}
             >
               <MenuIcon />
             </IconButton>
@@ -254,9 +247,9 @@ export default function Dashboard() {
         {/* NavBar End */}
         {/* SideBar Start */}
         <Drawer
-          className={`${hideSidebar && !open ? bootstrap.dNone : ""}`}
+          className={`${hideSidebar && !expandSidebar ? bootstrap.dNone : ""}`}
           variant="permanent"
-          open={open}
+          open={expandSidebar}
         >
           <Toolbar
             sx={{
