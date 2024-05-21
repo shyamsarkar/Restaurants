@@ -9,6 +9,7 @@ services:
     depends_on:
       - db
       - redis
+    restart: always
     environment:
       REDIS_URL: redis://redis:6379
       REDIS_PASSWORD: shyam
@@ -26,6 +27,7 @@ services:
       context: ./frontend
     ports:
       - "8000:8000"
+    restart: always
     environment:
       PORT: 8000
       BROWSER: none
