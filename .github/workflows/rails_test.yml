@@ -11,20 +11,17 @@ jobs:
     runs-on: ubuntu-latest
     services:
       postgres:
-        image: postgres:14
-        ports: ['5432:5432']
+        image: postgres:latest
+        ports:
+          - 5432:5432
         env:
-          POSTGRES_DB: restaurants
-          POSTGRES_USER: ${{ secrets.POSTGRES_USER }}
-          POSTGRES_PASSWORD: ${{ secrets.POSTGRES_PASSWORD }}
+          POSTGRES_DB: restaurants_test
+          POSTGRES_USER: postgres
+          POSTGRES_PASSWORD: postgres
         options: --health-cmd pg_isready --health-interval 10s --health-timeout 5s --health-retries 5
 
     steps:
-      - name: Checkout Repository
-        uses: actions/checkout@v2
-
-      - name: create env
-        run: cp ./backend/.env.sample ./backend/.env
+      - uses: actions/checkout@v3
 
       - name: Set Up Ruby
         uses: ruby/setup-ruby@v1
@@ -32,24 +29,21 @@ jobs:
           ruby-version: 3.3.0
           bundler-cache: true
 
-      - name: Cache Bundler dependencies
-        uses: actions/cache@v2
-        with:
-          path: vendor/bundle
-          key: ${{ runner.os }}-gems-${{ hashFiles('**/Gemfile.lock') }}
-          restore-keys: |
-            ${{ runner.os }}-gems-
+      - name: Add env file
+        run: |
+          cp ./backend/.env.sample ./backend/.env
 
       - name: Install Dependencies
-        run: bundle install
-        working-directory: ./backend
+        run: |
+          cd backend
+          bundle install --jobs 4 --retry 3
 
       - name: Database Setup
         run: |
-          bundle exec rails db:create RAILS_ENV=test
-          bundle exec rails db:migrate RAILS_ENV=test
-        working-directory: ./backend
+          cd backend
+          bundle exec rake db:create db:migrate
 
       - name: Run RSpec Tests
-        run: bundle exec rspec
-        working-directory: ./backend
+        run: |
+          cd backend
+          bundle exec rspec
