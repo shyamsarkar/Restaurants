@@ -12,7 +12,8 @@ jobs:
     services:
       postgres:
         image: postgres:latest
-        ports: ['5432:5432']
+        ports:
+          - 5432:5432
         env:
           POSTGRES_DB: restaurants_test
           POSTGRES_USER: postgres
@@ -28,7 +29,7 @@ jobs:
       - name: Set Up Ruby
         uses: ruby/setup-ruby@v1
         with:
-          ruby-version: ${{ file('backend/.ruby-version') }}
+          ruby-version: 3.3.0
           bundler-cache: true
 
       - name: Install Dependencies
