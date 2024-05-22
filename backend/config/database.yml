@@ -6,7 +6,7 @@
 #
 default: &default
   adapter: postgresql
-  host: localhost
+  host: <%= ENV.fetch("DB_HOST_PSQL") || 'localhost' %>
   username: <%= ENV.fetch("DB_USER_PSQL") %>
   password: <%= ENV.fetch("DB_PASS_PSQL") %>
   port: 5432
