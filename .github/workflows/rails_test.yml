@@ -18,10 +18,6 @@ jobs:
           POSTGRES_DB: restaurants_test
           POSTGRES_USER: postgres
           POSTGRES_PASSWORD: postgres
-          DB_HOST_PSQL: localhost
-          DB_NAME_PSQL: restaurants_test
-          DB_USER_PSQL: postgres
-          DB_PASS_PSQL: postgres
         options: --health-cmd pg_isready --health-interval 10s --health-timeout 5s --health-retries 5
 
     steps:
