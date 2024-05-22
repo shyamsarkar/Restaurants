@@ -1,18 +1,18 @@
-import React, { useState } from 'react';
-import { styled, createTheme, ThemeProvider } from "@mui/material/styles";
+import React, { useState, useEffect } from 'react';
+import { styled } from "@mui/material/styles";
 import MuiAppBar from "@mui/material/AppBar";
-import bootstrap from "../../../assets/bootstrap.module.scss";
 import Toolbar from "@mui/material/Toolbar";
 import IconButton from "@mui/material/IconButton";
-import MenuIcon from "@mui/icons-material/Menu";
 import Typography from "@mui/material/Typography";
 import Box from "@mui/material/Box";
 import Badge from "@mui/material/Badge";
-import NotificationsIcon from "@mui/icons-material/Notifications";
 import Menu from "@mui/material/Menu";
-import Alerts from "../../../pages/Dashboard/Alerts";
 import Avatar from "@mui/material/Avatar";
 import MenuItem from "@mui/material/MenuItem";
+import bootstrap from "../../../assets/bootstrap.module.scss";
+import MenuIcon from "@mui/icons-material/Menu";
+import NotificationsIcon from "@mui/icons-material/Notifications";
+import Alerts from "../../../pages/Dashboard/Alerts";
 import { useSelector, useDispatch } from 'react-redux';
 
 const NavBar = () => {
@@ -23,9 +23,11 @@ const NavBar = () => {
   const dispatch = useDispatch();
   const hideSidebar = useSelector((state) => state.sideBar.hideSidebar);
   const expandSidebar = useSelector((state) => state.sideBar.expandSidebar);
+  const openAlert = Boolean(anchorElAlert);
+  const openUser = Boolean(anchorElUser);
 
   const toggleDrawer = () => {
-    dispatch({type: expandSidebar ? 'COLLAPSE_MENU' : 'EXPAND_MENU'})
+    dispatch({ type: expandSidebar ? 'COLLAPSE_MENU' : 'EXPAND_MENU' })
   };
 
   const handleOpenAlert = (event) => {
@@ -109,7 +111,7 @@ const NavBar = () => {
                 vertical: "top",
                 horizontal: "right",
               }}
-              open={Boolean(anchorElAlert)}
+              open={openAlert}
               onClose={handleCloseAlert}
             >
               <Alerts />
@@ -135,7 +137,7 @@ const NavBar = () => {
                 vertical: "top",
                 horizontal: "right",
               }}
-              open={Boolean(anchorElUser)}
+              open={openUser}
               onClose={handleCloseUserMenu}
             >
               {settings.map((setting) => (
