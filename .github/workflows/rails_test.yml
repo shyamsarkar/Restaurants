@@ -32,27 +32,20 @@ jobs:
       - name: Set Up Ruby
         uses: ruby/setup-ruby@v1
         with:
-          ruby-version: 3.3.0
+          ruby-version: ${{ file('backend/.ruby-version') }}
           bundler-cache: true
 
-      - name: Cache Bundler dependencies
-        uses: actions/cache@v2
-        with:
-          path: vendor/bundle
-          key: ${{ runner.os }}-gems-${{ hashFiles('**/Gemfile.lock') }}
-          restore-keys: |
-            ${{ runner.os }}-gems-
-
       - name: Install Dependencies
-        run: bundle install
-        working-directory: ./backend
+        run: |
+          cd backend
+          bundle install --jobs 4 --retry 3
 
       - name: Database Setup
         run: |
-          bundle exec rails db:create RAILS_ENV=test
-          bundle exec rails db:migrate RAILS_ENV=test
-        working-directory: ./backend
+          cd backend
+          bundle exec rake db:create db:migrate
 
       - name: Run RSpec Tests
-        run: bundle exec rspec
-        working-directory: ./backend
+        run: |
+          cd backend
+          bundle exec rspec
