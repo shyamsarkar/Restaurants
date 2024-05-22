@@ -7,7 +7,6 @@ import List from "@mui/material/List";
 import Typography from "@mui/material/Typography";
 import Divider from "@mui/material/Divider";
 import IconButton from "@mui/material/IconButton";
-import DataTable from "../Dashboard/DataTable";
 import bootstrap from "../../assets/bootstrap.module.scss";
 import Avatar from "@mui/material/Avatar";
 import MenuItem from "@mui/material/MenuItem";
@@ -29,6 +28,8 @@ import EditIcon from '@mui/icons-material/Edit';
 import TextField from '@mui/material/TextField';
 import Snackbar from '@mui/material/Snackbar';
 import CloseIcon from '@mui/icons-material/Close';
+import Stack from '@mui/material/Stack';
+
 
 export default function BillEntry() {
   const itemTypes = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20];
@@ -70,7 +71,7 @@ export default function BillEntry() {
           <Grid item xs={12}>
             <ButtonGroup variant="contained" style={{ overflowX: 'scroll', whiteSpace: 'nowrap', maxWidth: '100%' }} aria-label="Basic button group">
               {itemTypes.map((elem) => (
-                <Button key={elem} color="success" style={{ minWidth: '200px' }}>Item Type {elem}</Button>
+                <Button key={elem + "newdata"} color="success" style={{ minWidth: '200px' }}>Item Type {elem}</Button>
               ))}
             </ButtonGroup>
           </Grid>
@@ -100,10 +101,10 @@ export default function BillEntry() {
             >
               <Button sx={{ my: 1 }} color="secondary" key={'secondary_button'}>Table Occupied</Button>
               {[1, 2, 3, 4, 5].map((data, index) => (
-                <Button sx={{ my: 1 }} color="success" key={index}>Table {data}</Button>
+                <Button sx={{ my: 1 }} color="success" key={index + 100}>Table {data}</Button>
               ))}
               {[4, 5, 6, 7, 8, 9, 10].map((data, index) => (
-                <Button sx={{ my: 1 }} color="primary" key={index}>Table {data}</Button>
+                <Button sx={{ my: 1 }} color="primary" key={index + 150}>Table {data}</Button>
               ))}
             </ButtonGroup>
           </Grid>
@@ -122,15 +123,13 @@ export default function BillEntry() {
                 <IconButton type="button" sx={{ p: '10px' }} aria-label="search">
                   <SearchIcon />
                 </IconButton>
-                {/* <Divider sx={{ height: 28, m: 0.5 }} orientation="vertical" /> */}
               </Paper>
               <Divider sx={{ marginTop: '20px' }} />
               <List sx={{ width: '100%', width: '100%', bgcolor: 'background.paper' }}>
                 {['Chilli Chicken', 'Chicken Masala', 'Chicken Tandoori', 'Prawn Fry', 'Prawn Masala', 'Fish'].map((data) => (
-                  <ListItem>
+                  <ListItem key={data}>
                     <ListItemAvatar>
                       <Avatar sx={{ backgroundColor: 'rebeccapurple' }}>
-                        {/* <BeachAccessIcon /> */}
                         <RestaurantIcon />
                       </Avatar>
                     </ListItemAvatar>
@@ -147,7 +146,7 @@ export default function BillEntry() {
           <Grid item xs={6} sx={{ backgroundColor: '#95dbc1', px: '10px' }}>
             <Typography variant="h6" gutterBottom>Table : {"Table Occupied"}</Typography>
             {[1, 2, 3, 4, 5].map(data => (
-              <List sx={{ width: '100%', width: '100%', bgcolor: 'background.paper', paddingBlock: 0 }}>
+              <List key={data + 50} sx={{ width: '100%', width: '100%', bgcolor: 'background.paper', paddingBlock: 0 }}>
                 <ListItem>
                   <TextField
                     hiddenLabel
@@ -181,19 +180,27 @@ export default function BillEntry() {
             ))}
 
 
-            <Grid item md={12} sx={{ bgcolor: 'background.paper', px: '10px' }}>
+            <Grid item md={12} sx={{ bgcolor: 'background.paper', px: '10px', pb: '10px' }}>
               <Typography sx={{ mt: 1, mb: 2 }} variant="h6" component="div">
                 Text only
               </Typography>
-              <Typography sx={{textAlign:'right'}} variant="subtitle1" gutterBottom>
+              <Typography sx={{ textAlign: 'right' }} variant="subtitle1" gutterBottom>
                 Total Food :
               </Typography>
-              <Typography sx={{textAlign:'right'}} variant="subtitle1" gutterBottom>
+              <Typography sx={{ textAlign: 'right' }} variant="subtitle1" gutterBottom>
                 Total Beverages :
               </Typography>
-              <Typography sx={{textAlign:'right'}} variant="subtitle1" gutterBottom>
+              <Typography sx={{ textAlign: 'right' }} variant="subtitle1" gutterBottom>
                 Grand Total :
               </Typography>
+            </Grid>
+
+            <Grid item md={12} sx={{ bgcolor: 'background.paper', px: '10px', py: '10px', mt: '10px' }}>
+              <Stack direction="row" spacing={2}>
+                <Button variant="contained" sx={{ minWidth: '105px' }} color="success">Save Bill</Button>
+                <Button variant="contained" sx={{ minWidth: '105px' }}>KOT</Button>
+                <Button variant="contained" sx={{ minWidth: '105px' }} color='error'>Delete</Button>
+              </Stack>
             </Grid>
           </Grid>
         </Grid>

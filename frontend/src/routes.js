@@ -23,10 +23,10 @@ const router = createBrowserRouter([
   {
     path: "bill-entry",
     element: (
-        <Layout>
-            <BillEntry />
-        </Layout>
-      ),
+      <Layout>
+        <BillEntry />
+      </Layout>
+    ),
   },
   {
     path: "example",
