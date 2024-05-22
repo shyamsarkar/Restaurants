@@ -33,6 +33,10 @@ jobs:
           ruby-version: 3.3.0
           bundler-cache: true
 
+      - name: Add env file
+        run: |
+          cp ./backend/.env.sample ./backend/.env
+
       - name: Install Dependencies
         run: |
           cd backend
@@ -41,7 +45,7 @@ jobs:
       - name: Database Setup
         run: |
           cd backend
-          bundle exec rake db:create db:migrate RAILS_ENV=test DB_HOST=${{ services.postgres.env.DB_HOST_PSQL }} DB_NAME=${{ services.postgres.env.DB_NAME_PSQL }} DB_USER=${{ services.postgres.env.DB_USER_PSQL }} DB_PASSWORD=${{ services.postgres.env.DB_PASS_PSQL }}
+          bundle exec rake db:create db:migrate
 
       - name: Run RSpec Tests
         run: |
