@@ -7,12 +7,12 @@ on:
 
 jobs:
   rspec:
+    name: Run RSpec Tests
     runs-on: ubuntu-latest
     services:
       postgres:
         image: postgres:latest
-        ports:
-          - 5432:5432
+        ports: ['5432:5432']
         env:
           POSTGRES_DB: restaurants_test
           POSTGRES_USER: postgres
@@ -20,30 +20,39 @@ jobs:
           DB_NAME_PSQL: restaurants_test
           DB_USER_PSQL: postgres
           DB_PASS_PSQL: postgres
-        options:
-          --health-cmd pg_isready
-          --health-interval 10s
-          --health-timeout 5s
-          --health-retries 5
-    steps:
-      uses: actions/checkout@v2
+        options: --health-cmd pg_isready --health-interval 10s --health-timeout 5s --health-retries 5
 
-      - name: Use Ruby version specified in .ruby-version
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v2
+
+      - name: create env
+        run: cp ./backend/.env.sample ./backend/.env
+
+      - name: Set Up Ruby
         uses: ruby/setup-ruby@v1
         with:
-          ruby-version: ${{ file('backend/.ruby-version') }}  # Assumes .ruby-version in backend/
+          ruby-version: 3.3.0
+          bundler-cache: true
 
-      - name: Bundle install for backend
-        run: |
-          cd backend
-          bundle install --jobs 4 --retry 3
+      - name: Cache Bundler dependencies
+        uses: actions/cache@v2
+        with:
+          path: vendor/bundle
+          key: ${{ runner.os }}-gems-${{ hashFiles('**/Gemfile.lock') }}
+          restore-keys: |
+            ${{ runner.os }}-gems-
 
-      - name: Setup database
-        run: |
-          cd backend
-          bundle exec rake db:create db:migrate
+      - name: Install Dependencies
+        run: bundle install
+        working-directory: ./backend
 
-      - name: Run Rails tests
+      - name: Database Setup
         run: |
-          cd backend
-          bundle exec rspec
+          bundle exec rails db:create RAILS_ENV=test
+          bundle exec rails db:migrate RAILS_ENV=test
+        working-directory: ./backend
+
+      - name: Run RSpec Tests
+        run: bundle exec rspec
+        working-directory: ./backend
