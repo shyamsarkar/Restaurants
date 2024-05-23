@@ -15,11 +15,31 @@ import NotificationsIcon from "@mui/icons-material/Notifications";
 import Alerts from "../../../pages/Dashboard/Alerts";
 import { useSelector, useDispatch } from 'react-redux';
 
+const drawerWidth = 240;
+const settings = ["Profile", "Logout"];
+
+
+const AppBar = styled(MuiAppBar, {
+  shouldForwardProp: (prop) => prop !== "open",
+})(({ theme, open }) => ({
+  zIndex: theme.zIndex.drawer + 1,
+  transition: theme.transitions.create(["width", "margin"], {
+    easing: theme.transitions.easing.sharp,
+    duration: theme.transitions.duration.leavingScreen,
+  }),
+  ...(open && {
+    marginLeft: drawerWidth,
+    width: `calc(100% - ${drawerWidth}px)`,
+    transition: theme.transitions.create(["width", "margin"], {
+      easing: theme.transitions.easing.sharp,
+      duration: theme.transitions.duration.enteringScreen,
+    }),
+  }),
+}));
+
 const NavBar = () => {
-  const drawerWidth = 240;
   const [anchorElAlert, setAnchorElAlert] = useState(null);
   const [anchorElUser, setAnchorElUser] = useState(null);
-  const settings = ["Profile", "Logout"];
   const dispatch = useDispatch();
   const hideSidebar = useSelector((state) => state.sideBar.hideSidebar);
   const expandSidebar = useSelector((state) => state.sideBar.expandSidebar);
@@ -46,24 +66,6 @@ const NavBar = () => {
   const handleCloseUserMenu = () => {
     setAnchorElUser(null);
   };
-
-  const AppBar = styled(MuiAppBar, {
-    shouldForwardProp: (prop) => prop !== "open",
-  })(({ theme, open }) => ({
-    zIndex: theme.zIndex.drawer + 1,
-    transition: theme.transitions.create(["width", "margin"], {
-      easing: theme.transitions.easing.sharp,
-      duration: theme.transitions.duration.leavingScreen,
-    }),
-    ...(open && {
-      marginLeft: drawerWidth,
-      width: `calc(100% - ${drawerWidth}px)`,
-      transition: theme.transitions.create(["width", "margin"], {
-        easing: theme.transitions.easing.sharp,
-        duration: theme.transitions.duration.enteringScreen,
-      }),
-    }),
-  }));
 
   return (
     <>

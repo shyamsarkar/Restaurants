@@ -81,7 +81,7 @@ export default function Dashboard() {
   const dispatch = useDispatch();
   const itemTypes = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20];
   const toggleDrawer = () => {
-    dispatch({type: expandSidebar ? 'COLLAPSE_MENU' : 'EXPAND_MENU'})
+    dispatch({ type: expandSidebar ? 'COLLAPSE_MENU' : 'EXPAND_MENU' })
   };
   const [anchorElUser, setAnchorElUser] = useState(null);
   const [anchorElAlert, setAnchorElAlert] = useState(null);
@@ -131,7 +131,7 @@ export default function Dashboard() {
 
   useEffect(() => {
     const handleResize = () => {
-      dispatch({type: window.innerWidth < 600 ? 'HIDE_MENU' : 'SHOW_MENU'})
+      dispatch({ type: window.innerWidth < 600 ? 'HIDE_MENU' : 'SHOW_MENU' })
     };
 
     window.addEventListener("resize", handleResize);
@@ -141,139 +141,11 @@ export default function Dashboard() {
     };
   }, []);
 
-  return (
-    <ThemeProvider theme={defaultTheme}>
-      <Box className={`${bootstrap.dFlex}`}>
-        <CssBaseline />
-        {/* NavBar Start */}
-        <AppBar
-          position="absolute"
-          className={`${hideSidebar ? bootstrap.w100 : ""}`}
-          open={expandSidebar}
-        >
-          <Toolbar className={`${bootstrap.ps5}`}>
-            <IconButton
-              edge="start"
-              color="inherit"
-              aria-label="open drawer"
-              onClick={toggleDrawer}
-              sx={{ marginRight: "36px" }}
-            >
-              <MenuIcon />
-            </IconButton>
-            <Typography
-              component="h1"
-              variant="h6"
-              color="inherit"
-              noWrap
-              sx={{ flexGrow: 1 }}
-            >
-              Dashboard
-            </Typography>
-            <Box className={`${bootstrap.mS3} `}>
-              <IconButton onClick={handleOpenAlert} color="inherit">
-                <Badge badgeContent={4} color="secondary">
-                  <NotificationsIcon />
-                </Badge>
-              </IconButton>
-              <Menu
-                className={`${bootstrap.mT5}`}
-                id="menu-appbar"
-                anchorEl={anchorElAlert}
-                anchorOrigin={{
-                  vertical: "top",
-                  horizontal: "right",
-                }}
-                keepMounted
-                transformOrigin={{
-                  vertical: "top",
-                  horizontal: "right",
-                }}
-                open={Boolean(anchorElAlert)}
-                onClose={handleCloseAlert}
-              >
-                <Alerts />
-              </Menu>
-            </Box>
-            <Box className={`${bootstrap.mS3} `}>
-              <IconButton onClick={handleOpenUserMenu}>
-                <Avatar
-                  alt="Remy Sharp"
-                  src="https://mui.com/static/images/avatar/2.jpg"
-                />
-              </IconButton>
-              <Menu
-                className={`${bootstrap.mT5}`}
-                id="menu-appbar"
-                anchorEl={anchorElUser}
-                anchorOrigin={{
-                  vertical: "top",
-                  horizontal: "right",
-                }}
-                keepMounted
-                transformOrigin={{
-                  vertical: "top",
-                  horizontal: "right",
-                }}
-                open={Boolean(anchorElUser)}
-                onClose={handleCloseUserMenu}
-              >
-                {settings.map((setting) => (
-                  <MenuItem key={setting} onClick={handleCloseUserMenu}>
-                    <Typography textAlign="center">{setting}</Typography>
-                  </MenuItem>
-                ))}
-              </Menu>
-            </Box>
-          </Toolbar>
-        </AppBar>
-        {/* NavBar End */}
-        {/* SideBar Start */}
-        <Drawer
-          className={`${hideSidebar && !expandSidebar ? bootstrap.dNone : ""}`}
-          variant="permanent"
-          open={expandSidebar}
-        >
-          <Toolbar
-            sx={{
-              display: "flex",
-              alignItems: "center",
-              justifyContent: "flex-end",
-              px: [1],
-            }}
-          >
-            <Typography
-              className={`${bootstrap.textCenter} ${bootstrap.w100}`}
-              variant="h5"
-              component="h5"
-            >
-              Restaurant
-            </Typography>
-          </Toolbar>
-          <Divider />
-          <List component="nav">{mainListItems}</List>
-        </Drawer>
-        {/* SideBar End */}
-        {/* Container Start */}
-        <Box
-          component="main"
-          sx={{
-            backgroundColor: (theme) =>
-              theme.palette.mode === "light"
-                ? theme.palette.grey[100]
-                : theme.palette.grey[900],
-            flexGrow: 1,
-            height: "100vh",
-            overflow: "auto",
-          }}
-        >
-          <Toolbar />
-          <Box className={`${bootstrap.pX4} ${bootstrap.mY4}`}>
-            <DataTable />
-          </Box>
-        </Box>
-        {/* Container End */}
-      </Box>
-    </ThemeProvider>
+  return (<>
+    <Toolbar />
+    <Box className={`${bootstrap.pX4} ${bootstrap.mY4}`}>
+      <DataTable />
+    </Box>
+  </>
   );
 }

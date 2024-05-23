@@ -33,7 +33,7 @@ function Landing() {
               <LunchDiningIcon sx={{ width: 40, height: 40 }} />
             </IconButton>
             <Typography variant="h5" color="inherit" noWrap>
-              Restaurant
+              Restaurants
             </Typography>
           </Box>
           <div className={styles.nav_links}>
