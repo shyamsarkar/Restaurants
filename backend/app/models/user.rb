@@ -7,4 +7,33 @@ class User < ApplicationRecord
     Honeybadger.notify("#{first_name} #{last_name} #{Faker::Name.name}")
     "#{first_name} #{last_name}"
   end
+
+  def super_admin?
+    roles.any? { |role| role.name == Role::SUPER_ADMIN }
+  end
+
+  def company_admin?
+    roles.any? { |role| role.name == Role::COMPANY_ADMIN }
+  end
+
+  def branch_admin?
+    roles.any? { |role| role.name == Role::BRANCH_ADMIN }
+  end
+
+  def end_user?
+    roles.any? { |role| role.name == Role::END_USER }
+  end
+
+  # def increment_failed_login_attempts!
+  #   failed_login_attempts ||= 0
+  #   failed_login_attempts += 1
+  #   last_failed_login_at = Time.zone.now
+  #   save!
+  # end
+
+  # def reset_failed_login_attempts!
+  #   failed_login_attempts = 0
+  #   last_failed_login_at = nil
+  #   save!
+  # end
 end

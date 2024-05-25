@@ -31,3 +31,5 @@
 
 en:
   hello: "Hello world"
+  users:
+    create_success: 'User was successfully created.'
