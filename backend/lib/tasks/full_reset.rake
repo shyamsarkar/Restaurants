@@ -4,6 +4,7 @@ namespace :db do
     truncate_database
     create_users
     create_roles
+    Rake::Task['db:seed'].invoke
   end
 
   def truncate_database
