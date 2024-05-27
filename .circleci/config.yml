@@ -46,6 +46,10 @@ jobs:
     working_directory: ~/project/backend
     environment:
       RAILS_ENV: test
+      DB_HOST_PSQL: localhost
+      DB_USER_PSQL: postgres
+      DB_PASS_PSQL: postgres
+      DB_NAME_PSQL: restaurants
     steps:
       - checkout:
           path: ~/project
