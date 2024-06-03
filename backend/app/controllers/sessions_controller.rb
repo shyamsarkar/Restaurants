@@ -3,7 +3,7 @@
 # Controller to handle Login(signin)(sign_in), logout(signout)(sign_out)
 class SessionsController < Clearance::SessionsController
   def create
-    email = params[:session][:email].downcase
+    email = params[:session][:email]
     user = User.find_by(email:)
     if user.present?
       @user = authenticate(params)

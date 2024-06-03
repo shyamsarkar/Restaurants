@@ -2,7 +2,9 @@ class UsersController < ApplicationController
   before_action :verify_auth_token
   load_resource
 
-  def index; end
+  def index
+    render json: @users, status: :ok
+  end
 
   def create
     @user = User.new(user_params)
