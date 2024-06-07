@@ -97,7 +97,7 @@ export default function BillEntry() {
               orientation="vertical"
               aria-label="Vertical button group"
               variant="contained"
-              sx={{ boxShadow: '0' }}
+              sx={{ boxShadow: '0',overflowY:'auto' }}
             >
               <Button sx={{ my: 1 }} color="secondary" key={'secondary_button'}>Table Occupied</Button>
               {[1, 2, 3, 4, 5].map((data, index) => (
@@ -109,7 +109,7 @@ export default function BillEntry() {
             </ButtonGroup>
           </Grid>
           {/* Third container with 33% width */}
-          <Grid item xs={4} sx={{ px: '10px' }}>
+          <Grid item xs={4} sx={{ px: '10px',overflow:"auto" }}>
             <>
               <Paper
                 component="form"
@@ -125,7 +125,7 @@ export default function BillEntry() {
                 </IconButton>
               </Paper>
               <Divider sx={{ marginTop: '20px' }} />
-              <List sx={{ width: '100%', width: '100%', bgcolor: 'background.paper' }}>
+              <List sx={{ width: '100%', bgcolor: 'background.paper', overflowY:"auto"  }}>
                 {['Chilli Chicken', 'Chicken Masala', 'Chicken Tandoori', 'Prawn Fry', 'Prawn Masala', 'Fish'].map((data) => (
                   <ListItem key={data}>
                     <ListItemAvatar>
@@ -143,10 +143,10 @@ export default function BillEntry() {
             </>
           </Grid>
           {/* Fourth container with 33% width */}
-          <Grid item xs={6} sx={{ backgroundColor: '#95dbc1', px: '10px' }}>
+          <Grid item xs={6} sx={{ backgroundColor: '#95dbc1', px: '10px',overflowY:"auto" }}>
             <Typography variant="h6" gutterBottom>Table : {"Table Occupied"}</Typography>
             {[1, 2, 3, 4, 5].map(data => (
-              <List key={data + 50} sx={{ width: '100%', width: '100%', bgcolor: 'background.paper', paddingBlock: 0 }}>
+              <List key={data + 50} sx={{ width: '100%', bgcolor: 'background.paper', paddingBlock: 0 }}>
                 <ListItem>
                   <TextField
                     hiddenLabel
