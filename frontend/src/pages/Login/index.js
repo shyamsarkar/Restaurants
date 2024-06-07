@@ -1,4 +1,4 @@
-import * as React from "react";
+import { useState } from "react";
 import Avatar from "@mui/material/Avatar";
 import Button from "@mui/material/Button";
 import CssBaseline from "@mui/material/CssBaseline";
@@ -11,19 +11,25 @@ import LockOutlinedIcon from "@mui/icons-material/LockOutlined";
 import Typography from "@mui/material/Typography";
 import { createTheme, ThemeProvider } from "@mui/material/styles";
 import { useNavigate } from "react-router-dom";
+import { post } from "../../helpers/api_helper";
 
 export default function Login() {
   const defaultTheme = createTheme();
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
   const navigate = useNavigate();
-  const handleSubmit = (event) => {
-    event.preventDefault();
-    const data = new FormData(event.currentTarget);
-    console.log({
-      email: data.get("email"),
-      password: data.get("password"),
-    });
-    navigate("/dashboard");
-  };
+
+  const handleLogin = (e) => {
+    const data = { email, password };
+    e.preventDefault();
+    const respData=post("/sign_in", {session: data})
+    //   });
+    respData.then(resp => console.log('Login successful:', resp));
+    // navigate("/dashboard");
+    // } catch (error) {
+    //   console.error('Login failed:', error.message);
+    // }
+  }
 
   return (
     <ThemeProvider theme={defaultTheme}>
@@ -36,7 +42,7 @@ export default function Login() {
           md={7}
           sx={{
             backgroundImage:
-              "url(https://source.unsplash.com/random/800x900/?sea)",
+              "url(https://images.unsplash.com/photo-1503756234508-e32369269deb?q=80&w=2232&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D)",
             backgroundRepeat: "no-repeat",
             backgroundColor: (t) =>
               t.palette.mode === "light"
@@ -65,7 +71,7 @@ export default function Login() {
             <Box
               component="form"
               noValidate
-              onSubmit={handleSubmit}
+              onSubmit={handleLogin}
               sx={{ mt: 1 }}
             >
               <TextField
@@ -76,6 +82,7 @@ export default function Login() {
                 label="Email Address"
                 name="email"
                 autoComplete="email"
+                onChange={(e) => setEmail(e.target.value)}
                 autoFocus
               />
               <TextField
@@ -87,6 +94,7 @@ export default function Login() {
                 type="password"
                 id="password"
                 autoComplete="current-password"
+                onChange={(e) => setPassword(e.target.value)}
               />
               <Button
                 type="submit"

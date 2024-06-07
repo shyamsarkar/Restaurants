@@ -1,5 +1,5 @@
 import React from 'react'
-import { styled, createTheme, ThemeProvider } from "@mui/material/styles";
+import { createTheme, ThemeProvider } from "@mui/material/styles";
 import Box from "@mui/material/Box";
 import bootstrap from "../../assets/bootstrap.module.scss";
 import CssBaseline from "@mui/material/CssBaseline";
@@ -25,7 +25,7 @@ const Layout = (props) => {
                                 : theme.palette.grey[900],
                         flexGrow: 1,
                         height: "100vh",
-                        overflow: "auto",
+                        overflow: "hidden",
                     }}
                 >
                     {props.children}
