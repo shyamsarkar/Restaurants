@@ -17,6 +17,7 @@ import MenuIcon from "@mui/icons-material/Menu";
 import { useTheme } from "@mui/material/styles";
 import useMediaQuery from "@mui/material/useMediaQuery";
 import styles from "./index.module.scss";
+import { v4 as uuidv4 } from 'uuid';
 
 function ElevationScroll(props) {
   const { children, window } = props;
@@ -77,7 +78,7 @@ const Header = (props) => {
     >
       <List>
         {links.map((link) => (
-          <ListItem button key={link.id}>
+          <ListItem button key={uuidv4()}>
             <ListItemText primary={link.route} />
           </ListItem>
         ))}
@@ -131,7 +132,7 @@ const Header = (props) => {
                   <Link
                     href={link.url}
                     underline="none"
-                    key={link.id}
+                    key={uuidv4()}
                   >
                     <Typography className={styles.link}>
                       {link.route}

@@ -18,6 +18,7 @@ import Link from "@mui/material/Link";
 import { createTheme, ThemeProvider } from "@mui/material/styles";
 import styles from "./index.module.scss";
 import { Link as RouterLink } from "react-router-dom";
+import { v4 as uuidv4 } from 'uuid';
 
 function Landing() {
   const cards = [1, 2, 3, 4, 5, 6, 7, 8, 9];
@@ -93,7 +94,7 @@ function Landing() {
           {/* End hero unit */}
           <Grid container spacing={4}>
             {cards.map((card) => (
-              <Grid item key={card} xs={12} sm={6} md={4}>
+              <Grid item key={uuidv4()} xs={12} sm={6} md={4}>
                 <Card
                   sx={{
                     height: "100%",

@@ -12,6 +12,7 @@ import Box from "@mui/material/Box";
 import Typography from "@mui/material/Typography";
 import Container from "@mui/material/Container";
 import { createTheme, ThemeProvider } from "@mui/material/styles";
+import { v4 as uuidv4 } from 'uuid';
 
 const cards = [1, 2, 3, 4, 5, 6];
 
@@ -66,7 +67,7 @@ export default function Album() {
           {/* End hero unit */}
           <Grid container spacing={4}>
             {cards.map((card) => (
-              <Grid item key={card} xs={12} sm={6} md={4}>
+              <Grid item key={uuidv4()} xs={12} sm={6} md={4}>
                 <Card
                   sx={{
                     height: "100%",
