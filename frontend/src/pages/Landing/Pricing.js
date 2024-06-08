@@ -14,6 +14,7 @@ import Typography from "@mui/material/Typography";
 import Link from "@mui/material/Link";
 import GlobalStyles from "@mui/material/GlobalStyles";
 import Container from "@mui/material/Container";
+import { v4 as uuidv4 } from 'uuid';
 
 function Copyright(props) {
   return (
@@ -153,7 +154,7 @@ export default function Pricing() {
             // Enterprise card is full width at sm breakpoint
             <Grid
               item
-              key={tier.title}
+              key={uuidv4()}
               xs={12}
               sm={tier.title === "Enterprise" ? 12 : 6}
               md={4}
@@ -200,7 +201,7 @@ export default function Pricing() {
                         component="li"
                         variant="subtitle1"
                         align="center"
-                        key={line}
+                        key={uuidv4()}
                       >
                         {line}
                       </Typography>
@@ -229,13 +230,13 @@ export default function Pricing() {
       >
         <Grid container spacing={4} justifyContent="space-evenly">
           {footers.map((footer) => (
-            <Grid item xs={6} sm={3} key={footer.title}>
+            <Grid item xs={6} sm={3} key={uuidv4()}>
               <Typography variant="h6" color="text.primary" gutterBottom>
                 {footer.title}
               </Typography>
               <ul>
                 {footer.description.map((item) => (
-                  <li key={item}>
+                  <li key={uuidv4()}>
                     <Link href="#" variant="subtitle1" color="text.secondary">
                       {item}
                     </Link>

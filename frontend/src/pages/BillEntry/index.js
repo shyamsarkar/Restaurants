@@ -29,6 +29,7 @@ import TextField from '@mui/material/TextField';
 import Snackbar from '@mui/material/Snackbar';
 import CloseIcon from '@mui/icons-material/Close';
 import Stack from '@mui/material/Stack';
+import { v4 as uuidv4 } from 'uuid';
 
 
 export default function BillEntry() {
@@ -100,11 +101,11 @@ export default function BillEntry() {
               sx={{ boxShadow: '0',overflowY:'auto' }}
             >
               <Button sx={{ my: 1 }} color="secondary" key={'secondary_button'}>Table Occupied</Button>
-              {[1, 2, 3, 4, 5].map((data, index) => (
-                <Button sx={{ my: 1 }} color="success" key={index + 100}>Table {data}</Button>
+              {[1, 2, 3, 4, 5].map((data) => (
+                <Button sx={{ my: 1 }} color="success" key={uuidv4()}>Table {data}</Button>
               ))}
-              {[4, 5, 6, 7, 8, 9, 10].map((data, index) => (
-                <Button sx={{ my: 1 }} color="primary" key={index + 150}>Table {data}</Button>
+              {[4, 5, 6, 7, 8, 9, 10].map((data) => (
+                <Button sx={{ my: 1 }} color="primary" key={uuidv4()}>Table {data}</Button>
               ))}
             </ButtonGroup>
           </Grid>
@@ -127,7 +128,7 @@ export default function BillEntry() {
               <Divider sx={{ marginTop: '20px' }} />
               <List sx={{ width: '100%', bgcolor: 'background.paper', overflowY:"auto"  }}>
                 {['Chilli Chicken', 'Chicken Masala', 'Chicken Tandoori', 'Prawn Fry', 'Prawn Masala', 'Fish'].map((data) => (
-                  <ListItem key={data}>
+                  <ListItem key={uuidv4()}>
                     <ListItemAvatar>
                       <Avatar sx={{ backgroundColor: 'rebeccapurple' }}>
                         <RestaurantIcon />
@@ -146,7 +147,7 @@ export default function BillEntry() {
           <Grid item xs={6} sx={{ backgroundColor: '#95dbc1', px: '10px',overflowY:"auto" }}>
             <Typography variant="h6" gutterBottom>Table : {"Table Occupied"}</Typography>
             {[1, 2, 3, 4, 5].map(data => (
-              <List key={data + 50} sx={{ width: '100%', bgcolor: 'background.paper', paddingBlock: 0 }}>
+              <List key={uuidv4()} sx={{ width: '100%', bgcolor: 'background.paper', paddingBlock: 0 }}>
                 <ListItem>
                   <TextField
                     hiddenLabel

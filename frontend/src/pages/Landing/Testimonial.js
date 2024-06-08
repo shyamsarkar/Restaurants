@@ -2,6 +2,7 @@ import React from "react";
 import { Typography, Box, Card, CardContent, Grid } from "@mui/material";
 import { Avatar } from "@mui/material";
 import styles from "./index.module.scss";
+import { v4 as uuidv4 } from 'uuid';
 
 const Testimonial = () => {
   const reviews = [
@@ -45,7 +46,7 @@ const Testimonial = () => {
     >
       <Grid container spacing={2}>
         {reviews.map((review) => (
-          <Grid item sm={12} md={4} key={review.id}>
+          <Grid item sm={12} md={4} key={uuidv4()}>
             <Card className={styles.testimonialCard}>
               <CardContent>
                 <Typography className={styles.testimonialStatement}>

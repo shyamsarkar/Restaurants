@@ -4,6 +4,7 @@ import EngineeringOutlinedIcon from "@mui/icons-material/EngineeringOutlined";
 import AllInclusiveIcon from "@mui/icons-material/AllInclusive";
 import PaidOutlinedIcon from "@mui/icons-material/PaidOutlined";
 import styles from "./index.module.scss";
+import { v4 as uuidv4 } from 'uuid';
 
 const Section = () => {
   const sectionItems = [
@@ -34,7 +35,7 @@ const Section = () => {
             xs={12}
             md={3.5}
             minHeight={300}
-            key={item.id}
+            key={uuidv4()}
             className={styles.sectionGridItem}
           >
             {item.icon}
