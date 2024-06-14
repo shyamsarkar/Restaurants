@@ -3,6 +3,8 @@ class User < ApplicationRecord
   has_many :user_roles, dependent: :destroy
   has_many :roles, through: :user_roles
 
+  LOGIN_LIMIT = 8
+
   def full_name
     Honeybadger.notify("#{first_name} #{last_name} #{Faker::Name.name}")
     "#{first_name} #{last_name}"
@@ -35,5 +37,14 @@ class User < ApplicationRecord
   #   failed_login_attempts = 0
   #   last_failed_login_at = nil
   #   save!
+  # end
+
+  def recreate_remember_token
+    new_token = SecureRandom.urlsafe_base64
+    update(remember_token: Digest::SHA1.hexdigest(new_token))
+  end
+
+  # def login_limit_reached?
+  #   failed_login_attempt >= LOGIN_LIMIT
   # end
 end

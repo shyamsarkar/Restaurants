@@ -33,3 +33,7 @@ en:
   hello: "Hello world"
   users:
     create_success: 'User was successfully created.'
+  session:
+    success_login: "USER.LOGIN_SUCCESS"
+    invalid_email: "USER.INVALID_EMAIL"
+    invalid_credentials: "USER.INVALID_CREDENTIALS"
