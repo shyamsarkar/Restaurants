@@ -11,20 +11,23 @@ import LockOutlinedIcon from "@mui/icons-material/LockOutlined";
 import Typography from "@mui/material/Typography";
 import { createTheme, ThemeProvider } from "@mui/material/styles";
 import { useNavigate } from "react-router-dom";
-import { post } from "../../helpers/api_helper";
+import { useDispatch } from 'react-redux';
+import { loginUser } from '../../store/auth/actions';
 
 export default function Login() {
   const defaultTheme = createTheme();
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const navigate = useNavigate();
+  const dispatch = useDispatch()
 
   const handleLogin = (e) => {
     const data = { email, password };
     e.preventDefault();
-    const respData=post("/sign_in", {session: data})
+    dispatch(loginUser(data, navigate))
+    // const respData=post("/sign_in", {session: data})
     //   });
-    respData.then(resp => console.log('Login successful:', resp));
+    // respData.then(resp => console.log('Login successful:', resp));
     // navigate("/dashboard");
     // } catch (error) {
     //   console.error('Login failed:', error.message);

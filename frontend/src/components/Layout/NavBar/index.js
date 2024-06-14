@@ -13,12 +13,14 @@ import bootstrap from "../../../assets/bootstrap.module.scss";
 import MenuIcon from "@mui/icons-material/Menu";
 import NotificationsIcon from "@mui/icons-material/Notifications";
 import Alerts from "../../../pages/Dashboard/Alerts";
-import { useSelector, useDispatch } from 'react-redux';
+import { useSelector, useDispatch, } from 'react-redux';
+import { useNavigate } from "react-router-dom";
+import {logoutUser} from '../../../store/auth/actions'
 import { v4 as uuidv4 } from 'uuid';
 
 
 const drawerWidth = 240;
-const settings = ["Profile", "Logout"];
+
 
 
 const AppBar = styled(MuiAppBar, {
@@ -47,6 +49,17 @@ const NavBar = () => {
   const expandSidebar = useSelector((state) => state.sideBar.expandSidebar);
   const openAlert = Boolean(anchorElAlert);
   const openUser = Boolean(anchorElUser);
+  const navigate=useNavigate()
+
+  const handleProfileClick=()=>{
+    setAnchorElUser(null)
+  }
+
+  const handleLogout=()=>{
+    dispatch(logoutUser(navigate))
+  }
+
+const settings = [{label:"Profile",id:uuidv4(),onClick:handleProfileClick}, {label:"Logout",id:uuidv4(),onClick:handleLogout}];
 
   const toggleDrawer = () => {
     dispatch({ type: expandSidebar ? 'COLLAPSE_MENU' : 'EXPAND_MENU' })
@@ -144,9 +157,9 @@ const NavBar = () => {
               open={openUser}
               onClose={handleCloseUserMenu}
             >
-              {settings.map((setting) => (
-                <MenuItem key={uuidv4()} onClick={handleCloseUserMenu}>
-                  <Typography textAlign="center">{setting}</Typography>
+              {settings.map(({id,onClick,label}) => (
+                <MenuItem key={id} onClick={onClick}>
+                  <Typography textAlign="center">{label}</Typography>
                 </MenuItem>
               ))}
             </Menu>
