@@ -39,7 +39,7 @@ class User < ApplicationRecord
   #   save!
   # end
 
-  def generate_remember_token
+  def recreate_remember_token
     new_token = SecureRandom.urlsafe_base64
     update(remember_token: Digest::SHA1.hexdigest(new_token))
   end
