@@ -1,3 +1,8 @@
+Points To Address
+1. Billing: Seat Select, Product Select, Create Order, Payment Button, Ordered Button, Show start-delivered Time
+2. 
+
+
 # Getting Started with Restaurenats
 
 ## Description
