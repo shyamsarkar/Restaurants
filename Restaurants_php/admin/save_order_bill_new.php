@@ -42,14 +42,13 @@ if (isset($_POST['table_id'])) {
 			} else {
 				$is_paid = 0;
 				$nc_amount = 0;
-				$paydate = "0000-00-00";
+				$paydate = date("Y-m-d");
 				$is_parcel_order = 0;
 			}
 
-			$form_data = array('table_id' => $table_id, 'billdate' => $billdate, 'billtime' => $billtime, 'billnumber' => $billnumber, 'ipaddress' => $ipaddress, 'createdate' => $createdate, 'net_bill_amt' => $net_bill_amt, 'basic_bill_amt' => $basic_bill_amt, 'food_amt' => $food_amt, 'bev_amt' => $bev_amt, 'disc_rs' => $disc_rs, 'cgst' => $cgst, 'sgst' => $sgst, 'checked_nc' => $checked_nc, 'nc_amount' => $nc_amount, 'is_paid' => $is_paid, 'paydate' => $paydate, 'disc_percent' => $disc_percent, 'is_parcel_order' => $is_parcel_order, 'waiter_id_stw' => $waiter_id_stw, 'waiter_id_cap' => $waiter_id_cap, 'cust_name' => $cust_name, 'cust_mobile' => $cust_mobile, 'gst_no' => $gst_no);
+			$form_data = array('table_id' => $table_id, 'billdate' => $billdate, 'billtime' => $billtime, 'billnumber' => $billnumber, 'ipaddress' => $ipaddress, 'createdate' => $createdate, 'net_bill_amt' => $net_bill_amt, 'basic_bill_amt' => $basic_bill_amt, 'food_amt' => $food_amt, 'bev_amt' => $bev_amt, 'disc_rs' => $disc_rs, 'cgst' => $cgst, 'sgst' => $sgst, 'checked_nc' => $checked_nc, 'nc_amount' => $nc_amount, 'is_paid' => $is_paid, 'paydate' => $paydate, 'disc_percent' => $disc_percent, 'is_parcel_order' => $is_parcel_order, 'waiter_id_stw' => (int)$waiter_id_stw, 'waiter_id_cap' => $waiter_id_cap, 'cust_name' => $cust_name, 'cust_mobile' => $cust_mobile, 'gst_no' => $gst_no);
 
 			$bill_id = $obj->insert_id("bills", $form_data);
-
 			//Update Bill Details
 			$where = array('table_id' => $table_id, 'billid' => 0);
 			$data = array('billid' => $bill_id);

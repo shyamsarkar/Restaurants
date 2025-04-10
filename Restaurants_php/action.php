@@ -3,7 +3,7 @@
 class DatabaseConfiguration
 {
 	public $conn;
-	public $server_name = "mysql";
+	public $server_name = "db";
 	public $user_name = "root";
 	public $password = "123";
 	public $database_name = "restaurant";
