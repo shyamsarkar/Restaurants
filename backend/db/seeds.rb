@@ -6,13 +6,13 @@
 #   movies = Movie.create([{ name: "Star Wars" }, { name: "Lord of the Rings" }])
 #   Character.create(name: "Luke", movie: movies.first)
 default_users = [
-  { email: 'superadmin@restaurants.com', name: 'Super Admin' },
-  { email: 'companyadmin1@restaurants.com', name: 'Company Admin1' },
-  { email: 'companyadmin2@restaurants.com', name: 'Company Admin2' },
-  { email: 'branchadmin1@restaurants.com', name: 'Branch Admin1' },
-  { email: 'branchadmin2@restaurants.com', name: 'Branch Admin2' },
-  { email: 'enduser1@restaurants.com', name: 'End User1' },
-  { email: 'enduser2@restaurants.com', name: 'End User2' }
+  { email: 'superadmin@khaobhai.co.in', name: 'Super Admin' },
+  { email: 'companyadmin1@khaobhai.co.in', name: 'Company Admin1' },
+  { email: 'companyadmin2@khaobhai.co.in', name: 'Company Admin2' },
+  { email: 'branchadmin1@khaobhai.co.in', name: 'Branch Admin1' },
+  { email: 'branchadmin2@khaobhai.co.in', name: 'Branch Admin2' },
+  { email: 'enduser1@khaobhai.co.in', name: 'End User1' },
+  { email: 'enduser2@khaobhai.co.in', name: 'End User2' }
 ]
 
 default_users.each do |user|

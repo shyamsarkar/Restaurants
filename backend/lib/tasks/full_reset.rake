@@ -4,6 +4,9 @@ namespace :db do
     truncate_database
     create_users
     create_roles
+    create_dining_tables
+    create_menus
+    create_items
     Rake::Task['db:seed'].invoke
   end
 
@@ -25,5 +28,17 @@ namespace :db do
     Role::ALL_ROLES.each do |role|
       Role.create!(name: role)
     end
+  end
+
+  def create_dining_tables
+    p '---------creating dining tables---------'
+  end
+
+  def create_menus
+    p '---------creating menus---------'
+  end
+
+  def create_items
+    p '---------creating items---------'
   end
 end
