@@ -1,18 +1,17 @@
 # frozen_string_literal: true
 
 class SessionsController < Clearance::SessionsController
-  def create
-    email = params[:session][:email]
-    user = User.find_by(email:)
-    if user.present?
-      # return render json: { message: I18n.t('session.login_limit_reached') }, status: :bad_request if user.login_limit_reached?
 
+  def create
+    email = params[:session][:email].downcase
+    user = User.find_by(email: email)
+    if user.present?
       @user = authenticate(params)
       sign_in @user
       if signed_in?
         render json: { message: I18n.t('session.success_login'), user: @user }, status: :ok
       else
-        # user.failed_login_attempt = user.failed_login_attempt + 1
+        user.failed_login_attempt = user.failed_login_attempt + 1
         user.increment(:failed_login_attempt).save
         render json: { message: I18n.t('session.invalid_credentials') }, status: :bad_request
       end
