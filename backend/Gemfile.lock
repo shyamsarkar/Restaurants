@@ -343,7 +343,7 @@ DEPENDENCIES
   pry
   puma
   rack-cors
-  rails
+  rails (~> 8.0.2)
   rspec-rails
   rubocop-rails
   sidekiq
