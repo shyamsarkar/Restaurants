@@ -1,6 +1,6 @@
-class CreateUsers < ActiveRecord::Migration[7.0]
+class CreateUsers < ActiveRecord::Migration[8.0]
   def change
-    create_table :users, id: :uuid do |t|
+    create_table :users do |t|
       t.string :first_name
       t.string :last_name
       t.string :email, null: false
@@ -10,6 +10,7 @@ class CreateUsers < ActiveRecord::Migration[7.0]
       t.boolean :is_active, null: false, default: true
       t.datetime :last_login_time
       t.integer :failed_login_attempt, default: 0
+      t.references :organization, null: false, foreign_key: true
       t.timestamps
     end
 
