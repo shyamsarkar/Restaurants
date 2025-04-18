@@ -1,6 +1,6 @@
 class CreateOrders < ActiveRecord::Migration[8.0]
   def change
-    create_table :orders, type: :uuid do |t|
+    create_table :orders, id: :uuid do |t|
       t.string :order_number, null: false
       t.decimal :total_amount, precision: 10, scale: 2, null: false
       t.decimal :total_discount, precision: 10, scale: 2, null: false

@@ -138,6 +138,9 @@ GEM
       pp (>= 0.6.0)
       rdoc (>= 4.0.0)
       reline (>= 0.4.2)
+    jbuilder (2.13.0)
+      actionview (>= 5.0.0)
+      activesupport (>= 5.0.0)
     json (2.10.2)
     language_server-protocol (3.17.0.4)
     launchy (3.1.1)
@@ -334,12 +337,13 @@ DEPENDENCIES
   dotenv-rails
   faker
   honeybadger
+  jbuilder
   letter_opener
   pg
   pry
   puma
   rack-cors
-  rails
+  rails (~> 8.0.2)
   rspec-rails
   rubocop-rails
   sidekiq

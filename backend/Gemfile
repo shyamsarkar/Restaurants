@@ -11,7 +11,7 @@ gem 'honeybadger'
 gem 'jbuilder'
 gem 'pg'
 gem 'puma'
-gem 'rails'
+gem 'rails', '~> 8.0.2'
 gem 'rubocop-rails', require: false
 gem 'sidekiq'
 
