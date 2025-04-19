@@ -37,5 +37,6 @@ en:
     success_login: "USER.LOGIN_SUCCESS"
     invalid_email: "USER.INVALID_EMAIL"
     invalid_credentials: "USER.INVALID_CREDENTIALS"
+    signed_out: "USER.SIGNED_OUT"
   dining_table:
     duplicate: "has already been taken"
