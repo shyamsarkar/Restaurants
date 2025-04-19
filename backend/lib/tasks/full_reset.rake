@@ -2,6 +2,7 @@ namespace :db do
   desc 'Full Reset to generate new demo data'
   task full_reset: :environment do
     truncate_database
+    create_organizations
     create_users
     create_roles
     create_dining_tables
@@ -11,15 +12,25 @@ namespace :db do
   end
 
   def truncate_database
-    # Rake::Task['db:drop'].invoke
-    # Rake::Task['db:create'].invoke
+    Rake::Task['db:drop'].invoke
+    Rake::Task['db:create'].invoke
     Rake::Task['db:migrate'].invoke
+  end
+
+  def create_organizations
+    p '---------creating organizations---------'
+    Organization.create!(name: 'Test Organization')
+    Organization.create!(name: 'Test Organization 2')
   end
 
   def create_users
     p '---------creating users---------'
     10.times do
-      User.create!(email: Faker::Internet.email, password: Faker::Alphanumeric.alpha(number: 10))
+      User.create!(
+        email: Faker::Internet.email,
+        password: Faker::Alphanumeric.alpha(number: 10),
+        organization: Organization.all.sample
+      )
     end
   end
 

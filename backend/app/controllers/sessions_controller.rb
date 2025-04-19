@@ -1,27 +1,23 @@
 # frozen_string_literal: true
 
 class SessionsController < Clearance::SessionsController
+  skip_load_and_authorize_resource
 
   def create
-    email = params[:session][:email].downcase
-    user = User.find_by(email: email)
-    if user.present?
-      @user = authenticate(params)
-      sign_in @user
-      if signed_in?
-        render json: { message: I18n.t('session.success_login'), user: @user }, status: :ok
-      else
-        user.failed_login_attempt = user.failed_login_attempt + 1
-        user.increment(:failed_login_attempt).save
-        render json: { message: I18n.t('session.invalid_credentials') }, status: :bad_request
-      end
+    @user = authenticate(params)
+    return render json: { message: I18n.t('session.invalid_email') }, status: :bad_request unless @user
+
+    sign_in(@user)
+    if signed_in?
+      render json: { message: I18n.t('session.success_login'), user: @user }, status: :ok
     else
-      render json: { message: I18n.t('session.invalid_email') }, status: :bad_request
+      user.increment(:failed_login_attempt)
+      render json: { message: I18n.t('session.invalid_credentials') }, status: :bad_request
     end
   end
 
   def destroy
     sign_out
-    render json: { message: 'Signed out successfully.' }, status: :ok
+    render json: { message: I18n.t('session.signed_out') }, status: :ok
   end
 end

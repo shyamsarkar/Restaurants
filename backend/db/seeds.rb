@@ -16,5 +16,5 @@ default_users = [
 ]
 
 default_users.each do |user|
-  User.create!(email: user[:email], password: 'Password123')
+  User.create!(email: user[:email], password: 'Password123', organization: Organization.first)
 end
