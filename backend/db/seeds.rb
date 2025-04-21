@@ -1,10 +1,3 @@
-# This file should contain all the record creation needed to seed the database with its default values.
-# The data can then be loaded with the bin/rails db:seed command (or created alongside the database with db:setup).
-#
-# Examples:
-#
-#   movies = Movie.create([{ name: "Star Wars" }, { name: "Lord of the Rings" }])
-#   Character.create(name: "Luke", movie: movies.first)
 default_users = [
   { email: 'superadmin@khaobhai.co.in', name: 'Super Admin' },
   { email: 'companyadmin1@khaobhai.co.in', name: 'Company Admin1' },
@@ -16,5 +9,5 @@ default_users = [
 ]
 
 default_users.each do |user|
-  User.create!(email: user[:email], password: 'Password123', organization: Organization.first)
+  User.create!(email: user[:email], password: 'Password123', branch: Branch.all.sample)
 end
