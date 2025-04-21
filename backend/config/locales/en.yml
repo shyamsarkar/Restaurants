@@ -38,5 +38,6 @@ en:
     invalid_email: "USER.INVALID_EMAIL"
     invalid_credentials: "USER.INVALID_CREDENTIALS"
     signed_out: "USER.SIGNED_OUT"
+    failed_limit_reached: "USER.FAILED_LIMIT_REACHED"
   dining_table:
     duplicate: "has already been taken"

@@ -1,24 +1,29 @@
-class Api::UnitsController < ApplicationController
-  skip_load_and_authorize_resource only: :create
-  def create
-    unit = Unit.new(unit_params)
-    unit.save
-    head :created
-  end
+# frozen_string_literal: true
 
-  def update
-    @unit.update(unit_params)
-    head :no_content
-  end
+module Api
+  # handle only units apis
+  class UnitsController < ApplicationController
+    skip_load_and_authorize_resource only: :create
+    def create
+      unit = Unit.new(unit_params)
+      unit.save
+      head :created
+    end
 
-  def destroy
-    @unit.update(is_deleted: true)
-    head :no_content
-  end
+    def update
+      @unit.update(unit_params)
+      head :no_content
+    end
 
-  private
+    def destroy
+      @unit.update(is_deleted: true)
+      head :no_content
+    end
 
-  def unit_params
-    params.require(:unit).permit(:name)
+    private
+
+    def unit_params
+      params.require(:unit).permit(:name)
+    end
   end
 end

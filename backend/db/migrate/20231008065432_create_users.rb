@@ -9,8 +9,9 @@ class CreateUsers < ActiveRecord::Migration[8.0]
       t.string :remember_token, limit: 128, null: false
       t.boolean :is_active, null: false, default: true
       t.datetime :last_login_time
-      t.integer :failed_login_attempt, default: 0
-      t.references :organization, null: false, foreign_key: true
+      t.integer :failed_login_attempts, default: 0
+      t.references :branch, null: false, foreign_key: true
+      t.datetime :last_failed_login_at
       t.timestamps
     end
 

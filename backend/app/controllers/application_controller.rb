@@ -1,22 +1,8 @@
+# frozen_string_literal: true
+
+# handle all loading and authorization
 class ApplicationController < ActionController::Base
   include Clearance::Controller
   skip_before_action :verify_authenticity_token
   load_and_authorize_resource
-
-  protected
-
-  def verify_auth_token
-    head :unauthorized unless api_token
-    user = User.find_by(remember_token: api_token)
-    sign_in user if user
-    head :unauthorized if current_user.blank?
-  end
-
-  private
-
-  def api_token
-    pattern = /^Bearer /
-    header = request.env['HTTP_AUTHORIZATION']
-    header.gsub(pattern, '') if header&.match(pattern)
-  end
 end

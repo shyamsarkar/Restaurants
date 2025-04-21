@@ -14,6 +14,15 @@ ActiveRecord::Schema[8.0].define(version: 2025_04_11_125032) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
 
+  create_table "branches", force: :cascade do |t|
+    t.string "name", null: false
+    t.integer "status", default: 0, null: false
+    t.bigint "organization_id", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["organization_id"], name: "index_branches_on_organization_id"
+  end
+
   create_table "dining_tables", force: :cascade do |t|
     t.string "name", null: false
     t.boolean "is_deleted", default: false, null: false
@@ -50,8 +59,8 @@ ActiveRecord::Schema[8.0].define(version: 2025_04_11_125032) do
     t.decimal "total", precision: 10, scale: 2, null: false
     t.decimal "discount", precision: 10, scale: 2, default: "0.0", null: false
     t.decimal "tax", precision: 10, scale: 2, default: "0.0", null: false
+    t.string "unit_name", null: false
     t.uuid "order_id"
-    t.bigint "unit_id", null: false
     t.uuid "item_id", null: false
     t.bigint "dining_table_id", null: false
     t.bigint "user_id", null: false
@@ -60,7 +69,6 @@ ActiveRecord::Schema[8.0].define(version: 2025_04_11_125032) do
     t.index ["dining_table_id"], name: "index_order_items_on_dining_table_id"
     t.index ["item_id"], name: "index_order_items_on_item_id"
     t.index ["order_id"], name: "index_order_items_on_order_id"
-    t.index ["unit_id"], name: "index_order_items_on_unit_id"
     t.index ["user_id"], name: "index_order_items_on_user_id"
   end
 
@@ -70,6 +78,7 @@ ActiveRecord::Schema[8.0].define(version: 2025_04_11_125032) do
     t.decimal "total_discount", precision: 10, scale: 2, null: false
     t.decimal "total_tax", precision: 10, scale: 2, null: false
     t.decimal "payable_amount", precision: 10, scale: 2, null: false
+    t.integer "status", default: 0, null: false
     t.bigint "dining_table_id", null: false
     t.bigint "user_id", null: false
     t.datetime "created_at", null: false
@@ -118,16 +127,18 @@ ActiveRecord::Schema[8.0].define(version: 2025_04_11_125032) do
     t.string "remember_token", limit: 128, null: false
     t.boolean "is_active", default: true, null: false
     t.datetime "last_login_time"
-    t.integer "failed_login_attempt", default: 0
-    t.bigint "organization_id", null: false
+    t.integer "failed_login_attempts", default: 0
+    t.bigint "branch_id", null: false
+    t.datetime "last_failed_login_at"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.index ["branch_id"], name: "index_users_on_branch_id"
     t.index ["confirmation_token"], name: "index_users_on_confirmation_token", unique: true
     t.index ["email"], name: "index_users_on_email"
-    t.index ["organization_id"], name: "index_users_on_organization_id"
     t.index ["remember_token"], name: "index_users_on_remember_token", unique: true
   end
 
+  add_foreign_key "branches", "organizations"
   add_foreign_key "dining_tables", "users"
   add_foreign_key "items", "menus"
   add_foreign_key "items", "units"
@@ -135,12 +146,11 @@ ActiveRecord::Schema[8.0].define(version: 2025_04_11_125032) do
   add_foreign_key "order_items", "dining_tables"
   add_foreign_key "order_items", "items"
   add_foreign_key "order_items", "orders"
-  add_foreign_key "order_items", "units"
   add_foreign_key "order_items", "users"
   add_foreign_key "orders", "dining_tables"
   add_foreign_key "orders", "users"
   add_foreign_key "units", "users"
   add_foreign_key "user_roles", "roles"
   add_foreign_key "user_roles", "users"
-  add_foreign_key "users", "organizations"
+  add_foreign_key "users", "branches"
 end
