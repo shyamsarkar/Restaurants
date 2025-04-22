@@ -3,6 +3,7 @@
 # handle login and logout
 class SessionsController < Clearance::SessionsController
   skip_load_and_authorize_resource
+  skip_before_action :login_required
 
   def create
     @user = authenticate(params)
