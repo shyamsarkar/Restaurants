@@ -13,8 +13,26 @@ import AddBoxIcon from '@mui/icons-material/AddBox';
 import RestaurantIcon from '@mui/icons-material/Restaurant';
 import EditIcon from '@mui/icons-material/Edit';
 import DeleteIcon from '@mui/icons-material/Delete';
+import Fab from '@mui/material/Fab';
+import AddIcon from '@mui/icons-material/Add';
+import { styled } from '@mui/material/styles';
 
-const SamplePage = () => {
+const Item = styled(Paper)(({ theme }) => {
+  console.log(theme)
+  return {
+  backgroundColor: theme.palette.grey[200],
+  ...theme.typography.body2,
+  padding: theme.spacing(1),
+  textAlign: 'center',
+  fontWeight: theme.typography.fontWeightMedium,
+  color: theme.palette.text.secondary,
+  ...theme.applyStyles('dark', {
+    backgroundColor: '#1A2027',
+  }),
+}});
+
+
+const OrdersPage = () => {
   const [floorNumber, setFloorNumber] = useState('0');
   const handleChange = (event: SelectChangeEvent) => {
     console.log(event.target.value);
@@ -23,25 +41,9 @@ const SamplePage = () => {
   };
 
   return (
-    <PageContainer title="Billing" description="Add all the items and calculate the total">
+    <PageContainer title="Orders" description="Add all the items and calculate the total">
       <Grid container>
         <Grid className='success' sx={{ pt: '10px', maxHeight: '85vh', overflow: 'auto', backgroundColor: 'success.main', textAlign: 'center' }} item xs={2}>
-          <FormControl sx={{ m: 1, width: '80%' }} size="small">
-            <InputLabel id="demo-simple-select-autowidth-label">Floor</InputLabel>
-            <Select
-              labelId="demo-simple-select-autowidth-label"
-              id="demo-simple-select-autowidth"
-              value={floorNumber}
-              onChange={handleChange}
-              autoWidth
-              label="Age"
-            >
-              <MenuItem value={0}>---All---</MenuItem>
-              <MenuItem value={1}>Ground Floor</MenuItem>
-              <MenuItem value={2}>First Floor</MenuItem>
-              <MenuItem value={3}>Second Floor</MenuItem>
-            </Select>
-          </FormControl>
           <ButtonGroup
             orientation="vertical"
             aria-label="Vertical button group"
@@ -67,16 +69,14 @@ const SamplePage = () => {
         <Grid item xs={4} sx={{ pt: '10px', px: '10px', maxHeight: '85vh' }}>
           <Paper
             component="form"
-            sx={{ p: '2px 4px', display: 'flex', alignItems: 'center', borderTop: '0.5px solid black' }}
+            sx={{ p: '3px 4px', display: 'flex', alignItems: 'center', borderTop: '0.5px solid black' }}
           >
             <InputBase
               sx={{ ml: 1, flex: 1 }}
               placeholder="Search Item"
               inputProps={{ 'aria-label': 'search item' }}
             />
-            <IconButton type="button" sx={{ p: '10px' }} aria-label="search">
-              <SearchIcon />
-            </IconButton>
+            <SearchIcon />
           </Paper>
           <Divider sx={{ marginTop: '10px' }} />
           <List sx={{ width: '100%', bgcolor: 'background.paper', overflowY: "auto", maxHeight: '76vh', overflow: 'auto', }}>
@@ -88,9 +88,12 @@ const SamplePage = () => {
                   </Avatar>
                 </ListItemAvatar>
                 <ListItemText primary={'Chicken Masala Full/Half'} secondary="500/Pcs" />
-                <IconButton color="primary" aria-label="Add" size="large">
+                <Fab size="small" color="primary" aria-label="add">
+                  <AddIcon />
+                </Fab>
+                {/* <IconButton color="primary" aria-label="Add" size="large">
                   <AddBoxIcon />
-                </IconButton>
+                </IconButton> */}
               </ListItem>
             ))}
           </List>
@@ -113,6 +116,7 @@ const SamplePage = () => {
                   secondary=" X 500/Pcs"
                   sx={{ ml: 1 }}
                 />
+                  <Item>357284</Item>
                 <IconButton edge="end" aria-label="edit">
                   <EditIcon />
                 </IconButton>
@@ -143,5 +147,5 @@ const SamplePage = () => {
   );
 };
 
-export default SamplePage;
+export default OrdersPage;
 

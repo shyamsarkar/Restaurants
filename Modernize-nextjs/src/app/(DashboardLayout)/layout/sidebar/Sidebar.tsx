@@ -1,6 +1,8 @@
 import { useMediaQuery, Box, Drawer } from "@mui/material";
 import SidebarItems from "./SidebarItems";
 import { Sidebar, Logo } from 'react-mui-sidebar';
+import Paper from '@mui/material/Paper';
+import ProfileLogout from "./ProfileLogout";
 
 interface ItemType {
   isMobileSidebarOpen: boolean;
@@ -15,7 +17,7 @@ const MSidebar = ({
 }: ItemType) => {
   const lgUp = useMediaQuery((theme: any) => theme.breakpoints.up("lg"));
 
-  const sidebarWidth = "270px";
+  const sidebarWidth = "250px";
 
   // Custom CSS for short scrollbar
   const scrollbarStyles = {
@@ -61,7 +63,7 @@ const MSidebar = ({
             }}
           >
             <Sidebar
-              width={'270px'}
+              width={sidebarWidth}
               collapsewidth="80px"
               open={isSidebarOpen}
               themeColor="#5d87ff"
@@ -77,6 +79,12 @@ const MSidebar = ({
                 {/* Sidebar Items */}
                 {/* ------------------------------------------- */}
                 <SidebarItems />
+              </Box>
+              <Box>
+                <ProfileLogout
+                  name="Shyam Sarkar"
+                  role="Super Admin"
+                />
               </Box>
             </Sidebar >
           </Box>

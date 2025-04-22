@@ -1,3 +1,5 @@
+'use client';
+
 import React, { useState } from "react";
 import Link from "next/link";
 import {
@@ -10,16 +12,29 @@ import {
   ListItemIcon,
   ListItemText,
 } from "@mui/material";
-
+import { useRouter } from 'next/navigation';
 import { IconListCheck, IconMail, IconUser } from "@tabler/icons-react";
+import api from '@/utils/axios';
 
 const Profile = () => {
-  const [anchorEl2, setAnchorEl2] = useState(null);
-  const handleClick2 = (event: any) => {
+  const [anchorEl2, setAnchorEl2] = useState<HTMLElement | null>(null);
+  const router = useRouter();
+
+  const handleClick2 = (event: React.MouseEvent<HTMLElement>) => {
     setAnchorEl2(event.currentTarget);
   };
   const handleClose2 = () => {
     setAnchorEl2(null);
+  };
+
+  const handleLogout = async () => {
+    try {
+      await api.delete('/sign_out');
+      router.push('/authentication/login');
+    } catch (err) {
+      console.error('Logout failed:', err);
+    }
+    handleClose2();
   };
 
   return (
@@ -75,19 +90,12 @@ const Profile = () => {
           </ListItemIcon>
           <ListItemText>My Account</ListItemText>
         </MenuItem>
-        <MenuItem>
-          <ListItemIcon>
-            <IconListCheck width={20} />
-          </ListItemIcon>
-          <ListItemText>My Tasks</ListItemText>
-        </MenuItem>
         <Box mt={1} py={1} px={2}>
           <Button
-            href="/authentication/login"
             variant="outlined"
             color="primary"
-            component={Link}
             fullWidth
+            onClick={handleLogout}
           >
             Logout
           </Button>

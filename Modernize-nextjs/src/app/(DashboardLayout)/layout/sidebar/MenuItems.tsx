@@ -15,9 +15,39 @@ const Menuitems = [
   },
   {
     id: uniqueId(),
-    title: "Billing",
+    title: "Orders",
     icon: IconAperture,
-    href: "/billing",
+    href: "/orders",
+  },
+  {
+    id: uniqueId(),
+    title: "Tables",
+    icon: IconAperture,
+    href: "/tables",
+  },
+  {
+    id: uniqueId(),
+    title: "Menu",
+    icon: IconAperture,
+    href: "/menu",
+  },
+  {
+    id: uniqueId(),
+    title: "Items",
+    icon: IconAperture,
+    href: "/items",
+  },
+  {
+    id: uniqueId(),
+    title: "Units",
+    icon: IconAperture,
+    href: "/units",
+  },
+  {
+    id: uniqueId(),
+    title: "Users",
+    icon: IconAperture,
+    href: "/users",
   },
 ];
 
