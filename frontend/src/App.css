@@ -1,0 +1,7 @@
+#root {
+  width: -webkit-fill-available;
+}
+
+.w-fit-content {
+  width: fit-content;
+}
