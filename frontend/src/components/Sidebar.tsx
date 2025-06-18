@@ -33,12 +33,12 @@ const Sidebar: React.FC<SidebarProps> = ({ collapsed, onToggle }) => {
 
   return (
     <div className={`fixed left-0 top-0 h-full bg-white shadow-xl z-50 transition-all duration-300 ease-in-out ${
-      collapsed ? 'w-20' : 'w-64'
+      collapsed ? 'w-16' : 'w-56'
     }`}>
       {/* Header */}
-      <div className="flex items-center justify-between p-6 border-b border-gray-200">
+      <div className="flex items-center justify-between p-2 border-b border-gray-200">
         <div className={`flex items-center space-x-3 ${collapsed ? 'opacity-0' : 'opacity-100'} transition-opacity duration-200 ${collapsed ? 'd-none' : ''}`}>
-          <div className="w-8 h-8 bg-blue-600 rounded-lg flex items-center justify-center">
+          <div className="d-none w-8 h-8 bg-blue-600 rounded-lg flex items-center justify-center">
             <Home className="w-5 h-5 text-white" />
           </div>
           <h1 className="text-xl font-bold text-gray-800 whitespace-nowrap">Restaurants</h1>
@@ -56,7 +56,7 @@ const Sidebar: React.FC<SidebarProps> = ({ collapsed, onToggle }) => {
       </div>
 
       {/* Navigation */}
-      <nav className="mt-8 px-4">
+      <nav className="mt-4 px-1">
         <ul className="space-y-2">
           {menuItems.map((item) => (
             <li key={item.path}>
@@ -88,7 +88,7 @@ const Sidebar: React.FC<SidebarProps> = ({ collapsed, onToggle }) => {
       </nav>
 
       {/* Profile Section */}
-      <div className="absolute bottom-0 left-0 right-0 p-4 border-t border-gray-200">
+      <div className="absolute bottom-0 left-0 right-0 p-2 border-t border-gray-200">
         <div className="relative">
           <button
             onClick={() => setProfileDropdownOpen(!profileDropdownOpen)}
@@ -99,7 +99,7 @@ const Sidebar: React.FC<SidebarProps> = ({ collapsed, onToggle }) => {
             <div className="w-10 h-10 bg-gradient-to-br from-blue-500 to-purple-600 rounded-full flex items-center justify-center flex-shrink-0">
               <People className="w-5 h-5 text-white" />
             </div>
-            <div className={`flex-1 text-left ${collapsed ? 'opacity-0 w-0' : 'opacity-100'} transition-all duration-200`}>
+            <div className={`flex-1 text-left truncate ${collapsed ? 'opacity-0 w-0' : 'opacity-100'} transition-all duration-200`}>
               <div className="text-sm font-medium text-gray-900">Shyam Sarkar</div>
             </div>
           </button>
