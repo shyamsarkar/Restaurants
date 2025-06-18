@@ -1,14 +1,15 @@
 import React from 'react';
 import { Notifications, Settings, Logout, Person } from '@mui/icons-material';
 import { useNavigate } from 'react-router-dom';
+import { useCommonStore } from '@/stores/common.store';
 
 interface ProfileDropdownProps {
-  collapsed: boolean;
   onClose: () => void;
 }
 
 
-const ProfileDropdown: React.FC<ProfileDropdownProps> = ({ collapsed, onClose }) => {
+const ProfileDropdown: React.FC<ProfileDropdownProps> = ({ onClose }) => {
+  const showSidebar = useCommonStore((state)=> state.showSidebar);
   const navigate = useNavigate()
   const handleLogout = () => {
     navigate('/login');
@@ -36,7 +37,7 @@ const ProfileDropdown: React.FC<ProfileDropdownProps> = ({ collapsed, onClose })
       />
 
       {/* Dropdown */}
-      <div className={`absolute bottom-full mb-2 ${collapsed ? 'left-full ml-2' : 'left-0'} w-56 bg-white rounded-lg shadow-lg border border-gray-200 py-2 z-50`}>
+      <div className={`absolute bottom-full mb-2 ${showSidebar ? 'left-0' : 'left-full ml-2'} w-56 bg-white rounded-lg shadow-lg border border-gray-200 py-2 z-50`}>
         {/* Profile Header */}
         <div className="px-4 py-3 border-b border-gray-100">
           <div className="flex items-center space-x-3">

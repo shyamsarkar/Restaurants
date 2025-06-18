@@ -1,18 +1,15 @@
 import { Outlet } from 'react-router-dom';
-import React, { useState } from 'react';
 import Sidebar from './Sidebar';
+import { useCommonStore } from '@/stores/common.store';
 
 const AdminLayout: React.FC = () => {
-  const [sidebarCollapsed, setSidebarCollapsed] = useState(false);
+  const showSidebar = useCommonStore((state)=> state.showSidebar)
 
   return (
     <div className="flex h-screen bg-gray-50">
-      <Sidebar
-        collapsed={sidebarCollapsed}
-        onToggle={() => setSidebarCollapsed(!sidebarCollapsed)}
-      />
+      <Sidebar />
       <main
-        className={`flex-1 transition-all duration-300 ease-in-out ${sidebarCollapsed ? 'ml-16' : 'ml-56'
+        className={`flex-1 transition-all duration-300 ease-in-out ${showSidebar ? 'ml-56' : 'ml-16'
           }`}
       >
         <div className="p-4 h-full overflow-auto">

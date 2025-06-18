@@ -1,6 +1,12 @@
 import React from 'react';
-// import { BarChart3, Users, DollarSign, TrendingUp, Activity, Calendar } from 'lucide-react';
-import { BarChart, People, AttachMoney, TrendingUp, Timeline, CalendarToday } from '@mui/icons-material';
+import {
+  BarChart,
+  People,
+  AttachMoney,
+  TrendingUp,
+  Timeline,
+  CalendarToday
+} from '@mui/icons-material';
 
 const Dashboard: React.FC = () => {
   const stats = [

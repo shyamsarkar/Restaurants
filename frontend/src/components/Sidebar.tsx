@@ -13,11 +13,7 @@ import {
 } from '@mui/icons-material';
 
 import ProfileDropdown from './ProfileDropdown';
-
-interface SidebarProps {
-  collapsed: boolean;
-  onToggle: () => void;
-}
+import { useCommonStore } from '@/stores/common.store';
 
 const menuItems = [
   { icon: Home, label: 'Dashboard', path: '/' },
@@ -28,29 +24,32 @@ const menuItems = [
   { icon: Settings, label: 'Settings', path: '/settings' },
 ];
 
-const Sidebar: React.FC<SidebarProps> = ({ collapsed, onToggle }) => {
+const Sidebar: React.FC = () => {
   const [profileDropdownOpen, setProfileDropdownOpen] = useState(false);
+  const showSidebar = useCommonStore((state) => state.showSidebar)
+  const { toggleSidebar } = useCommonStore()
+
 
   return (
     <div className={`fixed left-0 top-0 h-full bg-white shadow-xl z-50 transition-all duration-300 ease-in-out ${
-      collapsed ? 'w-16' : 'w-56'
+      showSidebar ? 'w-56' : 'w-16'
     }`}>
       {/* Header */}
       <div className="flex items-center justify-between p-2 border-b border-gray-200">
-        <div className={`flex items-center space-x-3 ${collapsed ? 'opacity-0' : 'opacity-100'} transition-opacity duration-200 ${collapsed ? 'd-none' : ''}`}>
+        <div className={`flex items-center space-x-3 ${showSidebar ? 'opacity-100' : 'opacity-0'} transition-opacity duration-200 ${showSidebar ? '' : 'd-none'}`}>
           <div className="d-none w-8 h-8 bg-blue-600 rounded-lg flex items-center justify-center">
             <Home className="w-5 h-5 text-white" />
           </div>
           <h1 className="text-xl font-bold text-gray-800 whitespace-nowrap">Restaurants</h1>
         </div>
         <button
-          onClick={onToggle}
+          onClick={() => toggleSidebar(!showSidebar)}
           className="p-2 rounded-lg hover:bg-gray-100 transition-colors duration-200"
         >
-          {collapsed ? (
-            <ChevronRight className="w-5 h-5 text-gray-600" />
-          ) : (
+          {showSidebar ? (
             <ChevronLeft className="w-5 h-5 text-gray-600" />
+          ) : (
+            <ChevronRight className="w-5 h-5 text-gray-600" />
           )}
         </button>
       </div>
@@ -71,12 +70,12 @@ const Sidebar: React.FC<SidebarProps> = ({ collapsed, onToggle }) => {
                 }
               >
                 <item.icon className="w-5 h-5 flex-shrink-0" />
-                <span className={`ml-3 font-medium ${collapsed ? 'opacity-0 w-0' : 'opacity-100'} transition-all duration-200`}>
+                <span className={`ml-3 font-medium ${showSidebar ? 'opacity-100' : 'opacity-0 w-0'} transition-all duration-200`}>
                   {item.label}
                 </span>
                 
                 {/* Tooltip for collapsed state */}
-                {collapsed && (
+                {!showSidebar && (
                   <div className="absolute left-full ml-2 px-3 py-1 bg-gray-800 text-white text-sm rounded-lg opacity-0 group-hover:opacity-100 transition-opacity duration-200 whitespace-nowrap z-50">
                     {item.label}
                   </div>
@@ -93,23 +92,20 @@ const Sidebar: React.FC<SidebarProps> = ({ collapsed, onToggle }) => {
           <button
             onClick={() => setProfileDropdownOpen(!profileDropdownOpen)}
             className={`flex items-center w-full p-3 rounded-lg hover:bg-gray-50 transition-colors duration-200 ${
-              collapsed ? 'justify-center' : 'space-x-3'
+              showSidebar ? 'space-x-3' : 'justify-center'
             }`}
           >
             <div className="w-10 h-10 bg-gradient-to-br from-blue-500 to-purple-600 rounded-full flex items-center justify-center flex-shrink-0">
               <People className="w-5 h-5 text-white" />
             </div>
-            <div className={`flex-1 text-left truncate ${collapsed ? 'opacity-0 w-0' : 'opacity-100'} transition-all duration-200`}>
+            <div className={`flex-1 text-left truncate ${showSidebar ? 'opacity-100' : 'opacity-0 w-0'} transition-all duration-200`}>
               <div className="text-sm font-medium text-gray-900">Shyam Sarkar</div>
             </div>
           </button>
 
           {/* Profile Dropdown */}
           {profileDropdownOpen && (
-            <ProfileDropdown 
-              collapsed={collapsed}
-              onClose={() => setProfileDropdownOpen(false)}
-            />
+            <ProfileDropdown onClose={() => setProfileDropdownOpen(false)} />
           )}
         </div>
       </div>
