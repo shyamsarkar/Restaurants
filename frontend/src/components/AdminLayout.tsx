@@ -7,16 +7,15 @@ const AdminLayout: React.FC = () => {
 
   return (
     <div className="flex h-screen bg-gray-50">
-      <Sidebar 
-        collapsed={sidebarCollapsed} 
-        onToggle={() => setSidebarCollapsed(!sidebarCollapsed)} 
+      <Sidebar
+        collapsed={sidebarCollapsed}
+        onToggle={() => setSidebarCollapsed(!sidebarCollapsed)}
       />
-      <main 
-        className={`flex-1 transition-all duration-300 ease-in-out ${
-          sidebarCollapsed ? 'ml-20' : 'ml-64'
-        }`}
+      <main
+        className={`flex-1 transition-all duration-300 ease-in-out ${sidebarCollapsed ? 'ml-16' : 'ml-56'
+          }`}
       >
-        <div className="p-8 h-full overflow-auto">
+        <div className="p-4 h-full overflow-auto">
           <Outlet />
         </div>
       </main>

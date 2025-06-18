@@ -1,34 +1,36 @@
-import PageContainer from '@/pages/PageContainer';
 import { useState } from 'react';
-import { Button } from '@/components/ui/button';
-import { Card } from '@/components/ui/card';
-import { Input } from '@/components/ui/input';
-import { Avatar, AvatarFallback } from '@/components/ui/avatar';
-import { Separator } from '@/components/ui/separator';
-import { 
-  Search, 
-  Plus, 
-  UtensilsCrossed, 
-  Edit2, 
-  Trash2,
-  Save,
-  FileText,
-} from 'lucide-react';
+import PageContainer from './PageContainer';
+import {
+  Box,
+  Button,
+  Card,
+  CardContent,
+  TextField,
+  Avatar,
+  Divider,
+  Typography,
+  Grid,
+  InputAdornment,
+  IconButton,
+  Paper,
+  Chip
+} from '@mui/material';
+import { Add, Construction, Delete, Description, Edit, Recycling, Save, Search } from '@mui/icons-material';
 
 export const Order = () => {
   const [selectedTable, setSelectedTable] = useState('Table 1');
   const [searchQuery, setSearchQuery] = useState('');
 
   const tableStatuses = [
-    { id: 'occupied', label: 'Table Occupied', status: 'occupied', variant: 'outline' as const },
-    { id: 'table1', label: 'Table 1', status: 'active', variant: 'default' as const },
-    { id: 'table2', label: 'Table 2', status: 'warning', variant: 'destructive' as const },
-    { id: 'table3', label: 'Table 3', status: 'error', variant: 'destructive' as const },
+    { id: 'occupied', label: 'Table Occupied', status: 'occupied', color: 'secondary' as const },
+    { id: 'table1', label: 'Table 1', status: 'active', color: 'primary' as const },
+    { id: 'table2', label: 'Table 2', status: 'warning', color: 'warning' as const },
+    { id: 'table3', label: 'Table 3', status: 'error', color: 'error' as const },
     ...Array.from({ length: 10 }, (_, i) => ({
       id: `table${i + 4}`,
       label: `Table ${i + 4}`,
       status: 'available',
-      variant: 'secondary' as const
+      color: 'secondary' as const
     }))
   ];
 
@@ -49,162 +51,291 @@ export const Order = () => {
 
   return (
     <PageContainer title="Orders" description="Add all the items and calculate the total">
-      <div className="h-screen bg-gray-50">
-        <div className="grid grid-cols-12 h-full">
+      <Box sx={{ height: 'calc(100vh - 120px)' }}>
+        <Grid container sx={{ height: '100%' }}>
           {/* Tables Sidebar */}
-          <div className="col-span-2 bg-green-50 border-r border-green-200 p-4">
-            <div className="space-y-2 h-full overflow-y-auto">
-              {tableStatuses.map((table) => (
-                <Button
-                  key={table.id}
-                  variant={selectedTable === table.label ? 'default' : table.variant}
-                  className="w-full justify-center text-sm font-medium transition-all hover:scale-105"
-                  onClick={() => setSelectedTable(table.label)}
-                >
-                  {table.label}
-                </Button>
-              ))}
-            </div>
-          </div>
+          <Grid item xs={2}>
+            <Paper 
+              sx={{ 
+                height: '100%', 
+                bgcolor: '#e8f5e8', 
+                borderRight: 1,
+                borderColor: '#4caf50',
+                borderRadius: 0,
+                p: 2,
+                overflowY: 'auto'
+              }}
+            >
+              <Box sx={{ display: 'flex', flexDirection: 'column', gap: 1 }}>
+                {tableStatuses.map((table) => (
+                  <Button
+                    key={table.id}
+                    variant={selectedTable === table.label ? 'contained' : 'outlined'}
+                    color={selectedTable === table.label ? 'primary' : table.color}
+                    fullWidth
+                    sx={{
+                      py: 1.5,
+                      fontWeight: 'medium',
+                      transition: 'all 0.2s ease-in-out',
+                      '&:hover': {
+                        transform: 'scale(1.05)',
+                      }
+                    }}
+                    onClick={() => setSelectedTable(table.label)}
+                  >
+                    {table.label}
+                  </Button>
+                ))}
+              </Box>
+            </Paper>
+          </Grid>
 
           {/* Menu Items */}
-          <div className="col-span-4 p-4 flex flex-col">
-            {/* Search Bar */}
-            <Card className="mb-4 shadow-sm border-t-2 border-t-slate-600">
-              <div className="flex items-center p-3">
-                <Search className="h-5 w-5 text-gray-400 mr-3" />
-                <Input
-                  placeholder="Search Item"
-                  value={searchQuery}
-                  onChange={(e) => setSearchQuery(e.target.value)}
-                  className="border-0 focus-visible:ring-0 text-base"
-                />
-              </div>
-            </Card>
+          <Grid size={4}>
+            <Box sx={{ p: 2, height: '100%', display: 'flex', flexDirection: 'column' }}>
+              {/* Search Bar */}
+              <Card sx={{ mb: 2, boxShadow: 2, borderTop: 3, borderTopColor: '#64748b' }}>
+                <CardContent sx={{ p: 2 }}>
+                  <TextField
+                    fullWidth
+                    placeholder="Search Item"
+                    value={searchQuery}
+                    onChange={(e) => setSearchQuery(e.target.value)}
+                    variant="outlined"
+                    size="small"
+                    InputProps={{
+                      startAdornment: (
+                        <InputAdornment position="start">
+                          <Search />
+                        </InputAdornment>
+                      ),
+                      sx: { 
+                        '& .MuiOutlinedInput-notchedOutline': { border: 'none' },
+                        fontSize: '1rem'
+                      }
+                    }}
+                  />
+                </CardContent>
+              </Card>
 
-            <Separator className="mb-4" />
+              <Divider sx={{ mb: 2 }} />
 
-            {/* Menu Items List */}
-            <div className="flex-1 overflow-y-auto">
-              <div className="space-y-2">
-                {menuItems
-                  .filter(item => 
-                    item.name.toLowerCase().includes(searchQuery.toLowerCase())
-                  )
-                  .map((item) => (
-                  <Card key={item.id} className="hover:shadow-md transition-shadow">
-                    <div className="flex items-center p-4">
-                      <Avatar className="h-12 w-12 bg-purple-600">
-                        <AvatarFallback className="bg-purple-600 text-white">
-                          <UtensilsCrossed className="h-6 w-6" />
-                        </AvatarFallback>
-                      </Avatar>
-                      <div className="flex-1 ml-4">
-                        <h3 className="font-medium text-gray-900">
-                          {item.name} {item.variant}
-                        </h3>
-                        <p className="text-sm text-gray-600">{item.price}</p>
-                      </div>
-                      <Button
-                        size="sm"
-                        className="rounded-full h-8 w-8 p-0 bg-blue-600 hover:bg-blue-700"
-                      >
-                        <Plus className="h-4 w-4" />
-                      </Button>
-                    </div>
-                  </Card>
-                ))}
-              </div>
-            </div>
-          </div>
+              {/* Menu Items List */}
+              <Box sx={{ flex: 1, overflowY: 'auto' }}>
+                <Box sx={{ display: 'flex', flexDirection: 'column', gap: 1 }}>
+                  {menuItems
+                    .filter(item => 
+                      item.name.toLowerCase().includes(searchQuery.toLowerCase())
+                    )
+                    .map((item) => (
+                    <Card 
+                      key={item.id} 
+                      sx={{ 
+                        transition: 'box-shadow 0.2s ease-in-out',
+                        '&:hover': { boxShadow: 3 }
+                      }}
+                    >
+                      <CardContent sx={{ p: 2 }}>
+                        <Box sx={{ display: 'flex', alignItems: 'center' }}>
+                          <Avatar sx={{ bgcolor: '#7c3aed', width: 48, height: 48 }}>
+                            <Construction  />
+                          </Avatar>
+                          <Box sx={{ flex: 1, ml: 2 }}>
+                            <Typography variant="body1" fontWeight="medium" color="text.primary">
+                              {item.name} {item.variant}
+                            </Typography>
+                            <Typography variant="body2" color="text.secondary">
+                              {item.price}
+                            </Typography>
+                          </Box>
+                          <IconButton
+                            size="small"
+                            sx={{
+                              bgcolor: '#2563eb',
+                              color: 'white',
+                              width: 32,
+                              height: 32,
+                              '&:hover': {
+                                bgcolor: '#1d4ed8',
+                              }
+                            }}
+                          >
+                            <Add />
+                          </IconButton>
+                        </Box>
+                      </CardContent>
+                    </Card>
+                  ))}
+                </Box>
+              </Box>
+            </Box>
+          </Grid>
 
           {/* Order Details */}
-          <div className="col-span-6 bg-green-50 p-4 flex flex-col">
-            <div className="mb-4">
-              <h2 className="text-xl font-semibold text-gray-900">
-                Table: {selectedTable}
-              </h2>
-            </div>
+          <Grid item xs={6}>
+            <Box sx={{ 
+              height: '100%', 
+              bgcolor: '#e8f5e8', 
+              p: 2, 
+              display: 'flex', 
+              flexDirection: 'column' 
+            }}>
+              <Box sx={{ mb: 2 }}>
+                <Typography variant="h5" fontWeight="semibold" color="text.primary">
+                  Table: {selectedTable}
+                </Typography>
+              </Box>
 
-            {/* Order Items List */}
-            <Card className="flex-1 mb-4 overflow-hidden">
-              <div className="h-full overflow-y-auto p-0">
-                <div className="space-y-0">
-                  {orderItems.map((item) => (
-                    <div key={item.id} className="flex items-center p-3 border-b border-gray-100 hover:bg-gray-50">
-                      <Input
-                        type="number"
-                        defaultValue={item.quantity}
-                        className="w-16 h-8 text-center text-sm bg-gray-100 border-gray-300"
-                        min="1"
-                      />
-                      <div className="flex-1 ml-3">
-                        <p className="font-medium text-gray-900">{item.name}</p>
-                        <p className="text-sm text-gray-600">X {item.price}/Pcs</p>
-                      </div>
-                      <div className="bg-gray-200 text-gray-700 px-3 py-1 rounded text-sm font-medium min-w-[80px] text-center">
-                        ₹{item.total.toLocaleString()}
-                      </div>
-                      <div className="flex ml-2 space-x-1">
-                        <Button variant="ghost" size="sm" className="h-8 w-8 p-0 hover:bg-blue-100">
-                          <Edit2 className="h-4 w-4 text-blue-600" />
-                        </Button>
-                        <Button variant="ghost" size="sm" className="h-8 w-8 p-0 hover:bg-red-100">
-                          <Trash2 className="h-4 w-4 text-red-600" />
-                        </Button>
-                      </div>
-                    </div>
+              {/* Order Items List */}
+              <Card sx={{ flex: 1, mb: 2, overflow: 'hidden' }}>
+                <Box sx={{ height: '100%', overflowY: 'auto' }}>
+                  {orderItems.map((item, index) => (
+                    <Box key={item.id}>
+                      <Box sx={{ 
+                        display: 'flex', 
+                        alignItems: 'center', 
+                        p: 1.5,
+                        '&:hover': { bgcolor: '#f9fafb' }
+                      }}>
+                        <TextField
+                          type="number"
+                          defaultValue={item.quantity}
+                          size="small"
+                          inputProps={{ min: 1, style: { textAlign: 'center' } }}
+                          sx={{ 
+                            width: 64,
+                            '& .MuiOutlinedInput-root': {
+                              bgcolor: '#f3f4f6',
+                              '& input': { py: 0.5 }
+                            }
+                          }}
+                        />
+                        <Box sx={{ flex: 1, ml: 1.5 }}>
+                          <Typography variant="body2" fontWeight="medium" color="text.primary">
+                            {item.name}
+                          </Typography>
+                          <Typography variant="caption" color="text.secondary">
+                            X {item.price}/Pcs
+                          </Typography>
+                        </Box>
+                        <Chip 
+                          label={`₹${item.total.toLocaleString()}`}
+                          sx={{ 
+                            bgcolor: '#e5e7eb',
+                            color: '#374151',
+                            fontWeight: 'medium',
+                            minWidth: 80
+                          }}
+                        />
+                        <Box sx={{ display: 'flex', ml: 1, gap: 0.5 }}>
+                          <IconButton 
+                            size="small"
+                            sx={{ 
+                              width: 32, 
+                              height: 32,
+                              '&:hover': { bgcolor: '#dbeafe', color: '#2563eb' }
+                            }}
+                          >
+                            <Edit />
+                          </IconButton>
+                          <IconButton 
+                            size="small"
+                            sx={{ 
+                              width: 32, 
+                              height: 32,
+                              '&:hover': { bgcolor: '#fee2e2', color: '#dc2626' }
+                            }}
+                          >
+                            <Recycling />
+                          </IconButton>
+                        </Box>
+                      </Box>
+                      {index < orderItems.length - 1 && <Divider />}
+                    </Box>
                   ))}
-                </div>
-              </div>
-            </Card>
+                </Box>
+              </Card>
 
-            <Separator className="mb-4" />
+              <Divider sx={{ mb: 2 }} />
 
-            {/* Totals */}
-            <Card className="mb-4 bg-white">
-              <div className="p-4">
-                <div className="grid grid-cols-3 gap-4 text-center">
-                  <div>
-                    <p className="text-sm text-gray-600">Food</p>
-                    <p className="font-semibold text-lg">₹15,480</p>
-                  </div>
-                  <div>
-                    <p className="text-sm text-gray-600">Beverages</p>
-                    <p className="font-semibold text-lg">₹2,250</p>
-                  </div>
-                  <div>
-                    <p className="text-sm text-gray-600">Grand Total</p>
-                    <p className="font-bold text-xl text-green-600">₹17,730</p>
-                  </div>
-                </div>
-              </div>
-            </Card>
+              {/* Totals */}
+              <Card sx={{ mb: 2, bgcolor: 'white' }}>
+                <CardContent sx={{ p: 2 }}>
+                  <Grid container spacing={2} textAlign="center">
+                    <Grid item xs={4}>
+                      <Typography variant="body2" color="text.secondary">
+                        Food
+                      </Typography>
+                      <Typography variant="h6" fontWeight="semibold">
+                        ₹15,480
+                      </Typography>
+                    </Grid>
+                    <Grid item xs={4}>
+                      <Typography variant="body2" color="text.secondary">
+                        Beverages
+                      </Typography>
+                      <Typography variant="h6" fontWeight="semibold">
+                        ₹2,250
+                      </Typography>
+                    </Grid>
+                    <Grid item xs={4}>
+                      <Typography variant="body2" color="text.secondary">
+                        Grand Total
+                      </Typography>
+                      <Typography variant="h5" fontWeight="bold" color="#16a34a">
+                        ₹17,730
+                      </Typography>
+                    </Grid>
+                  </Grid>
+                </CardContent>
+              </Card>
 
-            <Separator className="mb-4" />
+              <Divider sx={{ mb: 2 }} />
 
-            {/* Action Buttons */}
-            <Card className="bg-white">
-              <div className="p-4">
-                <div className="flex space-x-3">
-                  <Button className="flex-1 bg-blue-600 hover:bg-blue-700">
-                    <Save className="h-4 w-4 mr-2" />
-                    Save Bill
-                  </Button>
-                  <Button variant="secondary" className="flex-1">
-                    <FileText className="h-4 w-4 mr-2" />
-                    Get KOT
-                  </Button>
-                  <Button variant="destructive" className="flex-1">
-                    <Trash2 className="h-4 w-4 mr-2" />
-                    Delete
-                  </Button>
-                </div>
-              </div>
-            </Card>
-          </div>
-        </div>
-      </div>
+              {/* Action Buttons */}
+              <Card sx={{ bgcolor: 'white' }}>
+                <CardContent sx={{ p: 2 }}>
+                  <Grid container spacing={1.5}>
+                    <Grid item xs={4}>
+                      <Button
+                        fullWidth
+                        variant="contained"
+                        startIcon={<Save />}
+                        sx={{
+                          bgcolor: '#2563eb',
+                          '&:hover': { bgcolor: '#1d4ed8' }
+                        }}
+                      >
+                        Save Bill
+                      </Button>
+                    </Grid>
+                    <Grid item xs={4}>
+                      <Button
+                        fullWidth
+                        variant="outlined"
+                        startIcon={<Description />}
+                        color="secondary"
+                      >
+                        Get KOT
+                      </Button>
+                    </Grid>
+                    <Grid item xs={4}>
+                      <Button
+                        fullWidth
+                        variant="contained"
+                        startIcon={<Delete />}
+                        color="error"
+                      >
+                        Delete
+                      </Button>
+                    </Grid>
+                  </Grid>
+                </CardContent>
+              </Card>
+            </Box>
+          </Grid>
+        </Grid>
+      </Box>
     </PageContainer>
   );
 };

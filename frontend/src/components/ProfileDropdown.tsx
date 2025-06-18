@@ -16,8 +16,13 @@ const ProfileDropdown: React.FC<ProfileDropdownProps> = ({ collapsed, onClose })
   const gotoSettings = () => {
     navigate('/settings');
   }
+
+  const gotoNotification = () => {
+    navigate('/notification');
+  }
+
   const menuItems = [
-    { icon: Notifications, label: 'Notifications', badge: '3' },
+    { icon: Notifications, label: 'Notifications', onClick: gotoNotification, badge: '3' },
     { icon: Settings, label: 'Settings', onClick: gotoSettings },
     { icon: Logout, label: 'Logout', danger: true, onClick: handleLogout },
   ];
@@ -25,11 +30,11 @@ const ProfileDropdown: React.FC<ProfileDropdownProps> = ({ collapsed, onClose })
   return (
     <>
       {/* Backdrop */}
-      <div 
-        className="fixed inset-0 z-40" 
+      <div
+        className="fixed inset-0 z-40"
         onClick={onClose}
       />
-      
+
       {/* Dropdown */}
       <div className={`absolute bottom-full mb-2 ${collapsed ? 'left-full ml-2' : 'left-0'} w-56 bg-white rounded-lg shadow-lg border border-gray-200 py-2 z-50`}>
         {/* Profile Header */}
@@ -50,10 +55,9 @@ const ProfileDropdown: React.FC<ProfileDropdownProps> = ({ collapsed, onClose })
           {menuItems.map((item, index) => (
             <button
               key={index}
-              className={`flex items-center w-full px-4 py-2 text-left hover:bg-gray-50 transition-colors duration-200 ${
-                item.danger ? 'text-red-600 hover:bg-red-50' : 'text-gray-700'
-              }`}
-              onClick={ item.onClick ?? onClose}
+              className={`flex items-center w-full px-4 py-2 text-left hover:bg-gray-50 transition-colors duration-200 ${item.danger ? 'text-red-600 hover:bg-red-50' : 'text-gray-700'
+                }`}
+              onClick={item.onClick ?? onClose}
             >
               <item.icon className="w-4 h-4 mr-3" />
               <span className="text-sm font-medium">{item.label}</span>

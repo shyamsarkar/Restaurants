@@ -1,5 +1,5 @@
 import React from 'react';
-import { Person, Notifications, Shield, Palette, Public, Storage } from '@mui/icons-material';
+import { Person, Shield, Palette, Storage } from '@mui/icons-material';
 
 const Settings: React.FC = () => {
   const settingsSections = [
@@ -11,16 +11,6 @@ const Settings: React.FC = () => {
         { label: 'Personal Information', description: 'Update your name, email, and profile picture' },
         { label: 'Password & Security', description: 'Change your password and security settings' },
         { label: 'Account Preferences', description: 'Language, timezone, and other preferences' },
-      ]
-    },
-    {
-      title: 'Notifications',
-      icon: Notifications,
-      description: 'Configure how and when you receive notifications',
-      items: [
-        { label: 'Email Notifications', description: 'Control email notification preferences' },
-        { label: 'Push Notifications', description: 'Manage browser and mobile notifications' },
-        { label: 'Activity Alerts', description: 'Set alerts for important activities' },
       ]
     },
     {
@@ -41,16 +31,6 @@ const Settings: React.FC = () => {
         { label: 'Theme Settings', description: 'Choose between light and dark themes' },
         { label: 'Layout Options', description: 'Customize your dashboard layout' },
         { label: 'Accessibility', description: 'Accessibility and display options' },
-      ]
-    },
-    {
-      title: 'Integrations',
-      icon: Public,
-      description: 'Connect with third-party services and applications',
-      items: [
-        { label: 'Connected Apps', description: 'Manage connected applications' },
-        { label: 'API Keys', description: 'Generate and manage API keys' },
-        { label: 'Webhooks', description: 'Configure webhook endpoints' },
       ]
     },
     {

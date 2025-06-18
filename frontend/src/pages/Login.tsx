@@ -1,4 +1,6 @@
-import * as React from 'react';
+import { ChangeEvent, FormEvent, useState } from 'react';
+import { z } from 'zod';
+
 import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
 import FormLabel from '@mui/material/FormLabel';
@@ -9,6 +11,15 @@ import Typography from '@mui/material/Typography';
 import Stack from '@mui/material/Stack';
 import MuiCard from '@mui/material/Card';
 import { styled } from '@mui/material/styles';
+
+import { loginUser } from '@/services/api.service';
+
+const loginSchema = z.object({
+  email: z.string().email('Please enter a valid email address.'),
+  password: z.string().min(6, 'Password must be at least 6 characters long.'),
+});
+
+type LoginData = z.infer<typeof loginSchema>;
 
 const Card = styled(MuiCard)(({ theme }) => ({
   display: 'flex',
@@ -53,41 +64,41 @@ const SignInContainer = styled(Stack)(({ theme }) => ({
 }));
 
 export const Login = () => {
-  const [emailError, setEmailError] = React.useState(false);
-  const [emailErrorMessage, setEmailErrorMessage] = React.useState('');
-  const [passwordError, setPasswordError] = React.useState(false);
-  const [passwordErrorMessage, setPasswordErrorMessage] = React.useState('');
 
-  const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
-    event.preventDefault();
-    if (emailError || passwordError) return;
+  const [formData, setFormData] = useState<LoginData>({
+    email: '',
+    password: '',
+  });
+
+  const [formErrors, setFormErrors] = useState<Partial<
+    Record<keyof LoginData, string>
+  >>({});
+
+  const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
+    setFormData({ ...formData, [e.target.name]: e.target.value });
+    setFormErrors({ ...formErrors, [e.target.name]: '' });
   };
 
-  const validateInputs = () => {
-    const email = document.getElementById('email') as HTMLInputElement;
-    const password = document.getElementById('password') as HTMLInputElement;
+  const handleSubmit = async (event: FormEvent<HTMLFormElement>) => {
+    event.preventDefault();
 
-    let isValid = true;
+    const result = loginSchema.safeParse(formData);
 
-    if (!email.value || !/\S+@\S+\.\S+/.test(email.value)) {
-      setEmailError(true);
-      setEmailErrorMessage('Please enter a valid email address.');
-      isValid = false;
-    } else {
-      setEmailError(false);
-      setEmailErrorMessage('');
+    if (!result.success) {
+      const fieldErrors = result.error.flatten().fieldErrors;
+      setFormErrors({
+        email: fieldErrors.email?.[0] || '',
+        password: fieldErrors.password?.[0] || '',
+      });
+      return;
     }
 
-    if (!password.value || password.value.length < 6) {
-      setPasswordError(true);
-      setPasswordErrorMessage('Password must be at least 6 characters long.');
-      isValid = false;
-    } else {
-      setPasswordError(false);
-      setPasswordErrorMessage('');
+    try {
+      const user = await loginUser(formData.email, formData.password);
+      console.log('Logged in:', user);
+    } catch (err) {
+      console.error(err);
     }
-
-    return isValid;
   };
 
   return (
@@ -114,43 +125,38 @@ export const Login = () => {
           <FormControl>
             <FormLabel htmlFor="email">Email</FormLabel>
             <TextField
-              error={emailError}
-              helperText={emailErrorMessage}
               id="email"
-              type="email"
               name="email"
+              type="email"
               placeholder="your@email.com"
-              autoComplete="email"
-              autoFocus
               required
               fullWidth
               variant="outlined"
-              color={emailError ? 'error' : 'primary'}
+              value={formData.email}
+              onChange={handleChange}
+              error={!!formErrors.email}
+              helperText={formErrors.email}
+              autoComplete="email"
             />
           </FormControl>
           <FormControl>
             <FormLabel htmlFor="password">Password</FormLabel>
             <TextField
-              error={passwordError}
-              helperText={passwordErrorMessage}
-              name="password"
-              placeholder="••••••"
-              type="password"
               id="password"
-              autoComplete="current-password"
-              autoFocus
+              name="password"
+              type="password"
+              placeholder="••••••"
               required
               fullWidth
               variant="outlined"
-              color={passwordError ? 'error' : 'primary'}
+              value={formData.password}
+              onChange={handleChange}
+              error={!!formErrors.password}
+              helperText={formErrors.password}
+              autoComplete="current-password"
             />
           </FormControl>
-          <Button
-            type="submit"
-            fullWidth
-            variant="contained"
-            onClick={validateInputs}
-          >
+          <Button type="submit" fullWidth variant="contained">
             Login
           </Button>
           <Link
