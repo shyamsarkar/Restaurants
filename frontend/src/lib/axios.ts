@@ -10,11 +10,10 @@ const api = axios.create({
   withCredentials: true,
 });
 
-api.interceptors.request.use(
+api.interceptors.response.use(
   (response) => response,
   (error: AxiosError) => {
     const status = error.response?.status;
-
     if (status === 401) {
       useAuthStore.getState().setUser(null);
       window.location.href = '/login';
