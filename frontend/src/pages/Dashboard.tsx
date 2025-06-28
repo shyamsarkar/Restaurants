@@ -1,4 +1,5 @@
-import React from 'react';
+import React, { useEffect } from 'react';
+
 import {
   BarChart,
   People,
@@ -8,7 +9,16 @@ import {
   CalendarToday
 } from '@mui/icons-material';
 
+import { getDashboardData } from '@/services/api.service';
+
 const Dashboard: React.FC = () => {
+  useEffect(() => {
+    const fetchData = async () => {
+      await getDashboardData();
+    }
+    fetchData();
+  }, []);
+
   const stats = [
     { title: 'Total Revenue', value: '$54,239', change: '+12%', icon: AttachMoney, color: 'text-green-600' },
     { title: 'Active Users', value: '2,847', change: '+5%', icon: People, color: 'text-blue-600' },

@@ -1,4 +1,4 @@
-import { ChangeEvent, FormEvent, useState } from 'react';
+import { ChangeEvent, FormEvent, useEffect, useState } from 'react';
 import { z } from 'zod';
 
 import Box from '@mui/material/Box';
@@ -13,6 +13,8 @@ import MuiCard from '@mui/material/Card';
 import { styled } from '@mui/material/styles';
 
 import { loginUser } from '@/services/api.service';
+import { useAuthStore } from '@/stores/auth.store';
+import { useNavigate } from 'react-router-dom';
 
 const loginSchema = z.object({
   email: z.string().email('Please enter a valid email address.'),
@@ -64,6 +66,9 @@ const SignInContainer = styled(Stack)(({ theme }) => ({
 }));
 
 export const Login = () => {
+  const setUser = useAuthStore((state) => state.setUser);
+  const user = useAuthStore((state) => state.user);
+  const navigate = useNavigate();
 
   const [formData, setFormData] = useState<LoginData>({
     email: '',
@@ -73,6 +78,12 @@ export const Login = () => {
   const [formErrors, setFormErrors] = useState<Partial<
     Record<keyof LoginData, string>
   >>({});
+
+  useEffect(() => {
+    if (user) {
+      navigate('/', { replace: true });
+    }
+  }, [user, navigate]);
 
   const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
@@ -94,8 +105,9 @@ export const Login = () => {
     }
 
     try {
-      const user = await loginUser(formData.email, formData.password);
-      console.log('Logged in:', user);
+      const authData = await loginUser(formData.email, formData.password);
+      setUser(authData.user);
+      navigate('/', { replace: true });
     } catch (err) {
       console.error(err);
     }

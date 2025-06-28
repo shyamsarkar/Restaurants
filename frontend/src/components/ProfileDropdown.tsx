@@ -1,7 +1,9 @@
 import React from 'react';
-import { Notifications, Settings, Logout, Person } from '@mui/icons-material';
+import { Notifications, Settings, Logout } from '@mui/icons-material';
 import { useNavigate } from 'react-router-dom';
 import { useCommonStore } from '@/stores/common.store';
+import { logoutUser } from '@/services/api.service';
+import { useAuthStore } from '@/stores/auth.store';
 
 interface ProfileDropdownProps {
   onClose: () => void;
@@ -9,10 +11,17 @@ interface ProfileDropdownProps {
 
 
 const ProfileDropdown: React.FC<ProfileDropdownProps> = ({ onClose }) => {
-  const showSidebar = useCommonStore((state)=> state.showSidebar);
+  const showSidebar = useCommonStore((state) => state.showSidebar);
+  const setUser = useAuthStore((state)=> state.setUser)
   const navigate = useNavigate()
-  const handleLogout = () => {
-    navigate('/login');
+  const handleLogout = async () => {
+    try{
+    await logoutUser();
+    setUser(null);
+    }
+    catch{
+      console.log("Unable to logout");
+    }
   }
   const gotoSettings = () => {
     navigate('/settings');
@@ -39,16 +48,9 @@ const ProfileDropdown: React.FC<ProfileDropdownProps> = ({ onClose }) => {
       {/* Dropdown */}
       <div className={`absolute bottom-full mb-2 ${showSidebar ? 'left-0' : 'left-full ml-2'} w-56 bg-white rounded-lg shadow-lg border border-gray-200 py-2 z-50`}>
         {/* Profile Header */}
-        <div className="px-4 py-3 border-b border-gray-100">
-          <div className="flex items-center space-x-3">
-            <div className="w-10 h-10 bg-gradient-to-br from-blue-500 to-purple-600 rounded-full flex items-center justify-center">
-              <Person className="w-5 h-5 text-white" />
-            </div>
-            <div>
-              <div className="text-sm font-medium text-gray-900">Administrator</div>
-              <div className="text-xs text-gray-500">shyamsarkar@github.com</div>
-            </div>
-          </div>
+        <div className="flex flex-col items-center px-1 py-3 border-b border-gray-100">
+          <span className="text-lg font-medium text-gray-900 ml-1">Administrator</span>
+          <span className="text-xs text-gray-500 mt-1">shyamsarkar@github.com</span>
         </div>
 
         {/* Menu Items */}

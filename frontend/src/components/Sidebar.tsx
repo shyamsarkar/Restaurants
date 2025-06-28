@@ -10,6 +10,7 @@ import {
   Settings, 
   ChevronLeft,
   ChevronRight,
+  ShoppingCart,
 } from '@mui/icons-material';
 
 import ProfileDropdown from './ProfileDropdown';
@@ -17,6 +18,7 @@ import { useCommonStore } from '@/stores/common.store';
 
 const menuItems = [
   { icon: Home, label: 'Dashboard', path: '/' },
+  { icon: ShoppingCart, label: 'Orders', path: '/orders' },
   { icon: BarChart, label: 'Analytics', path: '/analytics' },
   { icon: People, label: 'Users', path: '/users' },
   { icon: FolderOpen, label: 'Projects', path: '/projects' },
@@ -36,8 +38,8 @@ const Sidebar: React.FC = () => {
     }`}>
       {/* Header */}
       <div className="flex items-center justify-between p-2 border-b border-gray-200">
-        <div className={`flex items-center space-x-3 ${showSidebar ? 'opacity-100' : 'opacity-0'} transition-opacity duration-200 ${showSidebar ? '' : 'd-none'}`}>
-          <div className="d-none w-8 h-8 bg-blue-600 rounded-lg flex items-center justify-center">
+        <div className={`flex items-center space-x-3 ${showSidebar ? 'opacity-100' : 'opacity-0'} transition-opacity duration-200 ${showSidebar ? '' : 'hidden'}`}>
+          <div className="hidden w-8 h-8 bg-blue-600 rounded-lg flex items-center justify-center">
             <Home className="w-5 h-5 text-white" />
           </div>
           <h1 className="text-xl font-bold text-gray-800 whitespace-nowrap">Restaurants</h1>
@@ -95,7 +97,7 @@ const Sidebar: React.FC = () => {
               showSidebar ? 'space-x-3' : 'justify-center'
             }`}
           >
-            <div className="w-10 h-10 bg-gradient-to-br from-blue-500 to-purple-600 rounded-full flex items-center justify-center flex-shrink-0">
+            <div className="w-8 h-8 bg-gradient-to-br from-blue-500 to-purple-600 rounded-full flex items-center justify-center flex-shrink-0">
               <People className="w-5 h-5 text-white" />
             </div>
             <div className={`flex-1 text-left truncate ${showSidebar ? 'opacity-100' : 'opacity-0 w-0'} transition-all duration-200`}>
