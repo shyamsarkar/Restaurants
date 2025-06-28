@@ -3,6 +3,7 @@ module Api
     skip_load_and_authorize_resource only: :create
     def create
       dining_table = DiningTable.new(dining_table_params)
+      dining_table.user = current_user
       if dining_table.save
         head :created
       else

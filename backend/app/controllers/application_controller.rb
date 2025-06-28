@@ -4,7 +4,7 @@
 class ApplicationController < ActionController::Base
   include Clearance::Controller
   skip_before_action :verify_authenticity_token
-  before_action :login_required
+  before_action :require_login
   load_and_authorize_resource
 
   private

@@ -12,5 +12,6 @@ Rails.application.routes.draw do
     resources :menus, only: %i[index show create update destroy]
     resources :items, only: %i[index show create update destroy]
     resources :order_items, only: %i[index show create update destroy]
+    resources :dashboard, only: %i[index]
   end
 end
