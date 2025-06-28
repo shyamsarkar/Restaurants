@@ -1,5 +1,8 @@
 class Api::ItemsController < ApplicationController
   skip_load_and_authorize_resource only: :create
+
+  def index; end
+
   def create
     item = Item.new(item_params)
     item.save

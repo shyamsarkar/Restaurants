@@ -2,12 +2,12 @@ class User < ApplicationRecord
   include Clearance::User
   belongs_to :branch
   has_many :dining_tables, dependent: :nullify
-  has_many :roles, through: :user_roles
   has_many :orders, dependent: :nullify
   has_many :order_items, dependent: :nullify
   has_many :units, dependent: :nullify
   has_many :user_roles, dependent: :destroy
-
+  has_many :roles, through: :user_roles
+  
   LOGIN_LIMIT = 8
 
   def full_name
