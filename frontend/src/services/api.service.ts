@@ -76,6 +76,14 @@ export const getDiningTables = async () => {
   });
 }
 
+export const createDiningTable = async (data: { name: string, description?: string }) => {
+  return apiClient<DiningTable>({
+    method: 'post',
+    url: '/api/dining_tables',
+    data,
+  });
+}
+
 export const getMenuItems = async () => {
   return apiClient<MenuItem[]>({
     method: 'get',

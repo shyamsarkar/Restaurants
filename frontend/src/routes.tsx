@@ -14,7 +14,9 @@ import Reports from '@/pages/Reports';
 import { Login } from '@/pages/Login';
 import { NotFound } from '@/pages/NotFound';
 import { Order } from '@/pages/Order';
-
+import { Tables } from '@/pages/Tables';
+import { Items } from '@/pages/Items';
+import { Menu } from '@/pages/Menu';
 
 export const routes: RouteObject[] = [
   {
@@ -26,6 +28,9 @@ export const routes: RouteObject[] = [
     children: [
       { path: '/', element: <Dashboard /> },
       { path: '/orders', element: <Order /> },
+      { path: '/tables', element: <Tables /> },
+      { path: '/items', element: <Items /> },
+      { path: '/menu', element: <Menu /> },
       { path: '/analytics', element: <Analytics /> },
       { path: '/users', element: <Users /> },
       { path: '/projects', element: <Projects /> },

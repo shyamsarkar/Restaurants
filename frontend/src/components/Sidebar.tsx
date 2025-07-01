@@ -7,10 +7,13 @@ import {
   People, 
   FolderOpen, 
   Description, 
-  Settings, 
   ChevronLeft,
   ChevronRight,
   ShoppingCart,
+  TableRestaurant,
+  MenuBook,
+  ChecklistRtl,
+  Scale
 } from '@mui/icons-material';
 
 import ProfileDropdown from './ProfileDropdown';
@@ -19,11 +22,14 @@ import { useCommonStore } from '@/stores/common.store';
 const menuItems = [
   { icon: Home, label: 'Dashboard', path: '/' },
   { icon: ShoppingCart, label: 'Orders', path: '/orders' },
+  { icon: TableRestaurant, label: 'Table', path: '/tables' },
+  { icon: MenuBook, label: 'Menu', path: '/menu' },
+  { icon: ChecklistRtl, label: 'Items', path: '/items' },
+  { icon: Scale, label: 'Units', path: '/units' },
   { icon: BarChart, label: 'Analytics', path: '/analytics' },
   { icon: People, label: 'Users', path: '/users' },
   { icon: FolderOpen, label: 'Projects', path: '/projects' },
   { icon: Description, label: 'Reports', path: '/reports' },
-  { icon: Settings, label: 'Settings', path: '/settings' },
 ];
 
 const Sidebar: React.FC = () => {
