@@ -10,11 +10,15 @@ import TextField from '@mui/material/TextField';
 import Typography from '@mui/material/Typography';
 import Stack from '@mui/material/Stack';
 import MuiCard from '@mui/material/Card';
+import Google from '@mui/icons-material/Google';
+import Snackbar from '@mui/material/Snackbar';
 import { styled } from '@mui/material/styles';
 
 import { loginUser } from '@/services/api.service';
 import { useAuthStore } from '@/stores/auth.store';
 import { useNavigate } from 'react-router-dom';
+import { Alert } from '@mui/material';
+
 
 const loginSchema = z.object({
   email: z.string().email('Please enter a valid email address.'),
@@ -69,6 +73,8 @@ export const Login = () => {
   const setUser = useAuthStore((state) => state.setUser);
   const user = useAuthStore((state) => state.user);
   const navigate = useNavigate();
+  const [isLoading, setIsLoading] = useState(false);
+  const [openToastr, setOpenToastr] = useState(false);
 
   const [formData, setFormData] = useState<LoginData>({
     email: '',
@@ -109,8 +115,16 @@ export const Login = () => {
       setUser(authData.user);
       navigate('/', { replace: true });
     } catch (err) {
-      console.error(err);
+      setOpenToastr(true);
     }
+  };
+
+  const onGoogleLogin = async () => {
+    console.log('Google login clicked');
+  }
+
+  const handleToastrClose = () => {
+    setOpenToastr(false);
   };
 
   return (
@@ -181,7 +195,42 @@ export const Login = () => {
             Forgot your password?
           </Link>
         </Box>
+
+        {/* Divider */}
+        <div className="relative">
+          <div className="absolute inset-0 flex items-center">
+            <div className="w-full border-t border-gray-300" />
+          </div>
+          <div className="relative flex justify-center text-sm">
+            <span className="px-2 bg-white text-gray-500">Or continue with</span>
+          </div>
+        </div>
+
+        {/* Google Login Button */}
+        <Button
+          type="button"
+          onClick={onGoogleLogin}
+          disabled={isLoading}
+
+        >
+          <div className="flex items-center justify-center">
+            <Google className="h-5 w-5 mr-3" />
+            Continue with Google
+          </div>
+        </Button>
       </Card>
+
+
+      {openToastr && <Snackbar open autoHideDuration={5000} onClose={handleToastrClose} anchorOrigin={{ vertical: 'bottom', horizontal: 'right' }}>
+        <Alert
+          onClose={handleToastrClose}
+          severity="error"
+          variant="filled"
+        >
+          Login failed. Please try again.
+        </Alert>
+      </Snackbar>}
+
     </SignInContainer>
   );
 }
