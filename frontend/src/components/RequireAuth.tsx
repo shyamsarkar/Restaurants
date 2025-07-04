@@ -1,7 +1,7 @@
-import { useLocation, Navigate } from 'react-router-dom';
+import { useLocation, Navigate, Outlet } from 'react-router-dom';
 import { useAuthStore } from '@/stores/auth.store';
 
-export const RequireAuth = ({ children }: { children: JSX.Element }) => {
+export const RequireAuth = ({ children }: { children?: JSX.Element }) => {
   const user = useAuthStore((state) => state.user);
   const location = useLocation();
 
@@ -9,5 +9,5 @@ export const RequireAuth = ({ children }: { children: JSX.Element }) => {
     return <Navigate to="/login" state={{ from: location }} replace />;
   }
 
-  return children;
+  return children ?? <Outlet />;
 };

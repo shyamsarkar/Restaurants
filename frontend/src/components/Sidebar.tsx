@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { NavLink } from 'react-router-dom';
+import { NavLink, useNavigate } from 'react-router-dom';
 
 import { 
   Home, 
@@ -19,24 +19,30 @@ import {
 import ProfileDropdown from './ProfileDropdown';
 import { useCommonStore } from '@/stores/common.store';
 
+const basePath = '/restaurants';
+
 const menuItems = [
-  { icon: Home, label: 'Dashboard', path: '/' },
-  { icon: ShoppingCart, label: 'Orders', path: '/orders' },
-  { icon: TableRestaurant, label: 'Table', path: '/tables' },
-  { icon: MenuBook, label: 'Menu', path: '/menu' },
-  { icon: ChecklistRtl, label: 'Items', path: '/items' },
-  { icon: Scale, label: 'Units', path: '/units' },
-  { icon: BarChart, label: 'Analytics', path: '/analytics' },
-  { icon: People, label: 'Users', path: '/users' },
-  { icon: FolderOpen, label: 'Projects', path: '/projects' },
-  { icon: Description, label: 'Reports', path: '/reports' },
+  { icon: Home, label: 'Dashboard', path: `${basePath}` },
+  { icon: ShoppingCart, label: 'Orders', path: `${basePath}/orders` },
+  { icon: TableRestaurant, label: 'Table', path: `${basePath}/tables` },
+  { icon: MenuBook, label: 'Menu', path: `${basePath}/menu` },
+  { icon: ChecklistRtl, label: 'Items', path: `${basePath}/items` },
+  { icon: Scale, label: 'Units', path: `${basePath}/units` },
+  { icon: BarChart, label: 'Analytics', path: `${basePath}/analytics` },
+  { icon: People, label: 'Users', path: `${basePath}/users` },
+  { icon: FolderOpen, label: 'Projects', path: `${basePath}/projects` },
+  { icon: Description, label: 'Reports', path: `${basePath}/reports` },
 ];
 
 const Sidebar: React.FC = () => {
   const [profileDropdownOpen, setProfileDropdownOpen] = useState(false);
   const showSidebar = useCommonStore((state) => state.showSidebar)
   const { toggleSidebar } = useCommonStore()
+  const navigate = useNavigate();
 
+  const handleNavigate = () => {
+    navigate('/');
+  }
 
   return (
     <div className={`fixed left-0 top-0 h-full bg-white shadow-xl z-50 transition-all duration-300 ease-in-out ${
@@ -48,7 +54,7 @@ const Sidebar: React.FC = () => {
           <div className="hidden w-8 h-8 bg-blue-600 rounded-lg flex items-center justify-center">
             <Home className="w-5 h-5 text-white" />
           </div>
-          <h1 className="text-xl font-bold text-gray-800 whitespace-nowrap">Restaurants</h1>
+          <h1 onClick={handleNavigate} className="cursor-pointer text-xl font-bold text-gray-800 whitespace-nowrap">Restaurants</h1>
         </div>
         <button
           onClick={() => toggleSidebar(!showSidebar)}
