@@ -11,7 +11,7 @@ import {
 
 import { getDashboardData } from '@/services/api.service';
 
-const Dashboard: React.FC = () => {
+const Restaurants: React.FC = () => {
   useEffect(() => {
     const fetchData = async () => {
       await getDashboardData();
@@ -95,4 +95,4 @@ const Dashboard: React.FC = () => {
   );
 };
 
-export default Dashboard;
+export default Restaurants;
