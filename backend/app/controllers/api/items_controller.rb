@@ -5,7 +5,8 @@ class Api::ItemsController < ApplicationController
 
   def create
     item = Item.new(item_params)
-    item.save
+    item.unit_id = Unit.first.id
+    item.save!
     head :created
   end
 

@@ -1,5 +1,4 @@
 import React from 'react';
-// import { DivideIcon as LucideIcon } from 'lucide-react';
 import { ListRounded } from '@mui/icons-material';
 import { useNavigate } from 'react-router-dom';
 import ResponsiveAppBar from '@/components/Home/AppBar';
