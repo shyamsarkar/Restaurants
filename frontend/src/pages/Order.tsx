@@ -40,7 +40,7 @@ export const Order = () => {
     }
   };
 
-  const addMenuItemToOrder = (itemId: number) => {
+  const addOrderItem = (itemId: number) => {
     console.log(`table ${selectedTable} - ItemId: ${itemId} `);
     handleFocus();
   };
@@ -174,7 +174,7 @@ export const Order = () => {
                             </Typography>
                           </Box>
                           <IconButton
-                            onClick={() => addMenuItemToOrder(item.id)}
+                            onClick={() => addOrderItem(item.id)}
                             size="small"
                             sx={{
                               bgcolor: '#2563eb',

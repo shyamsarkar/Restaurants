@@ -41,7 +41,7 @@ const Sidebar: React.FC = () => {
   const navigate = useNavigate();
 
   const handleNavigate = () => {
-    navigate('/');
+    navigate(basePath);
   }
 
   return (
@@ -76,7 +76,7 @@ const Sidebar: React.FC = () => {
               <NavLink
                 to={item.path}
                 className={({ isActive }) =>
-                  `flex items-center px-4 py-3 rounded-lg transition-all duration-200 group relative ${
+                  `flex items-center px-4 py-1 rounded-lg transition-all duration-200 group relative ${
                     isActive
                       ? 'bg-blue-50 text-blue-600 border-r-2 border-blue-600'
                       : 'text-gray-700 hover:bg-gray-50 hover:text-gray-900'

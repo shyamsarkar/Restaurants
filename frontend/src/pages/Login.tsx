@@ -114,7 +114,7 @@ export const Login = () => {
       const authData = await loginUser(formData.email, formData.password);
       setUser(authData.user);
       navigate('/', { replace: true });
-    } catch (err) {
+    } catch {
       setOpenToastr(true);
     }
   };

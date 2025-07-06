@@ -11,7 +11,7 @@ import Restaurants from '@/pages/Restaurants';
 import { Order } from '@/pages/Order';
 import { Tables } from '@/pages/Tables';
 import { Items } from '@/pages/Items';
-import { Menu } from '@/pages/Menu';
+import { MenuOption } from '@/pages/Menu';
 import Analytics from '@/pages/Analytics';
 import Users from '@/pages/Users';
 import Projects from '@/pages/Projects';
@@ -41,7 +41,7 @@ export const routes: RouteObject[] = [
               { path: 'orders', element: <Order /> },
               { path: 'tables', element: <Tables /> },
               { path: 'items', element: <Items /> },
-              { path: 'menu', element: <Menu /> },
+              { path: 'menu', element: <MenuOption /> },
               { path: 'analytics', element: <Analytics /> },
               { path: 'users', element: <Users /> },
               { path: 'projects', element: <Projects /> },

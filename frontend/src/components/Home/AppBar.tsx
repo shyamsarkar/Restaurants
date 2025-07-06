@@ -7,11 +7,8 @@ import Typography from '@mui/material/Typography';
 import Menu from '@mui/material/Menu';
 import Container from '@mui/material/Container';
 import Avatar from '@mui/material/Avatar';
-import Tooltip from '@mui/material/Tooltip';
 import MenuItem from '@mui/material/MenuItem';
 import { useAuthStore } from '@/stores/auth.store';
-
-const menuOptions = ['Profile', 'Logout'];
 
 function ResponsiveAppBar() {
   const user = useAuthStore((state) => state.user);
@@ -21,7 +18,7 @@ function ResponsiveAppBar() {
     setAnchorElUser(event.currentTarget);
   };
 
-  const handleCloseUserMenu = () => {
+  const handleLogout = () => {
     setAnchorElUser(null);
   };
 
@@ -48,7 +45,7 @@ function ResponsiveAppBar() {
               <Avatar alt={user?.name} src="user_profile.jpg" />
             </IconButton>
             <Menu
-              sx={{ mt: '45px' }}
+              sx={{ mt: '48px' }}
               id="menu-appbar"
               anchorEl={anchorElUser}
               anchorOrigin={{
@@ -61,13 +58,14 @@ function ResponsiveAppBar() {
                 horizontal: 'right',
               }}
               open={Boolean(anchorElUser)}
-              onClose={handleCloseUserMenu}
+              onClose={() => setAnchorElUser(null)}
             >
-              {menuOptions.map((option) => (
-                <MenuItem key={option} onClick={handleCloseUserMenu}>
-                  <Typography sx={{ textAlign: 'center' }}>{option}</Typography>
-                </MenuItem>
-              ))}
+              <MenuItem key='profile' onClick={() => setAnchorElUser(null)}>
+                <Typography sx={{ textAlign: 'center' }}>Profile</Typography>
+              </MenuItem>
+              <MenuItem key='logout' onClick={handleLogout}>
+                <Typography sx={{ textAlign: 'center' }}>Logout</Typography>
+              </MenuItem>
             </Menu>
           </Box>
         </Toolbar>

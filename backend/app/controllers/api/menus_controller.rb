@@ -2,7 +2,8 @@ class Api::MenusController < ApplicationController
   skip_load_and_authorize_resource only: :create
   def create
     menu = Menu.new(menu_params)
-    menu.save
+    menu.user = current_user
+    menu.save!
     head :created
   end
 
