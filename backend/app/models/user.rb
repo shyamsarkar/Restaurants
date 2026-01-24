@@ -1,5 +1,8 @@
+#  frozen_string_literal: true
+
 class User < ApplicationRecord
   include Clearance::User
+
   belongs_to :branch
   has_many :dining_tables, dependent: :nullify
   has_many :orders, dependent: :nullify
@@ -7,7 +10,7 @@ class User < ApplicationRecord
   has_many :units, dependent: :nullify
   has_many :user_roles, dependent: :destroy
   has_many :roles, through: :user_roles
-  
+
   LOGIN_LIMIT = 8
 
   def full_name

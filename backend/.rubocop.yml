@@ -1,4 +1,8 @@
-require: rubocop-rails
+plugins:
+  - rubocop-rails
+
+AllCops:
+  NewCops: enable
 
 Gemspec/DevelopmentDependencies:
   Enabled: true # or false
