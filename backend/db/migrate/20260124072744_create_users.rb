@@ -2,7 +2,7 @@ class CreateUsers < ActiveRecord::Migration[8.0]
   def change
     create_table :users do |t|
       ## Devise Required
-      t.string :email,              null: false, default: ''
+      t.string :email, null: false, default: ''
       t.string :encrypted_password, null: false, default: ''
 
       ## Optional Devise modules
@@ -15,10 +15,6 @@ class CreateUsers < ActiveRecord::Migration[8.0]
       t.string :last_name
       t.boolean :is_active, null: false, default: true
       t.datetime :last_login_time
-
-      ## Multi-tenancy
-      t.references :organization, null: false, foreign_key: true
-      t.references :branch, null: true, foreign_key: true # optional for now
 
       t.timestamps
     end

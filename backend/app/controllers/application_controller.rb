@@ -19,3 +19,4 @@ class ApplicationController < ActionController::Base
     @current_ability ||= Ability.new(current_user)
   end
 end
+

@@ -3,18 +3,23 @@ class Ability
   include CanCan::Ability
 
   def initialize(user)
-    return if user.blank?
+    return unless user
 
-    # Super admin can manage everything
-    can :manage, :all if user.super_admin?
+    # 🔑 Super Admin
+    if user.has_role?(:super_admin)
+      can :manage, :all
+      return
+    end
 
-    # Users can only manage resources in their organization
-    can :manage, User, organization_id: user.organization_id
-    can :manage, Branch, organization_id: user.organization_id
+    # 🏢 Tenant scoped permissions
+    can :manage, User, tenant_id: user.tenant_id
+    can :manage, Branch, tenant_id: user.tenant_id
 
-    # Future models (menus, items, orders, tables) will also be scoped
-    can :manage, Menu, branch: { organization_id: user.organization_id } if defined?(Menu)
-    can :manage, Item, branch: { organization_id: user.organization_id } if defined?(Item)
-    can :manage, DiningTable, branch: { organization_id: user.organization_id } if defined?(DiningTable)
+    # 🍽 Future models — add ONLY when they exist
+    can :manage, Menu, branch: { tenant_id: user.tenant_id } if defined?(Menu)
+    can :manage, Item, branch: { tenant_id: user.tenant_id } if defined?(Item)
+
+    # Self access
+    can :read, User, id: user.id
   end
 end

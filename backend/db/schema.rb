@@ -10,40 +10,75 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.0].define(version: 2026_01_24_075407) do
+ActiveRecord::Schema[8.0].define(version: 2026_01_24_150231) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
 
-  create_table "branches", force: :cascade do |t|
+  create_table "items", force: :cascade do |t|
     t.string "name", null: false
-    t.bigint "organization_id", null: false
+    t.decimal "price", precision: 10, scale: 2, null: false
+    t.string "unit", null: false
+    t.string "description"
+    t.boolean "is_available", default: true, null: false
+    t.bigint "menu_id", null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
-    t.index ["organization_id"], name: "index_branches_on_organization_id"
+    t.index ["menu_id", "name"], name: "index_items_on_menu_id_and_name"
+    t.index ["menu_id"], name: "index_items_on_menu_id"
   end
 
-  create_table "organizations", force: :cascade do |t|
+  create_table "memberships", force: :cascade do |t|
+    t.bigint "user_id", null: false
+    t.bigint "tenant_id", null: false
+    t.string "role", default: "3", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["tenant_id"], name: "index_memberships_on_tenant_id"
+    t.index ["user_id"], name: "index_memberships_on_user_id"
+  end
+
+  create_table "menus", force: :cascade do |t|
+    t.string "name", null: false
+    t.integer "status", default: 0, null: false
+    t.bigint "tenant_id", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["tenant_id", "name"], name: "index_menus_on_tenant_id_and_name", unique: true
+    t.index ["tenant_id"], name: "index_menus_on_tenant_id"
+  end
+
+  create_table "order_items", force: :cascade do |t|
+    t.bigint "order_id", null: false
+    t.bigint "item_id", null: false
+    t.integer "quantity", null: false
+    t.decimal "price", precision: 10, scale: 2, null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["item_id"], name: "index_order_items_on_item_id"
+    t.index ["order_id", "item_id"], name: "index_order_items_on_order_id_and_item_id"
+    t.index ["order_id"], name: "index_order_items_on_order_id"
+  end
+
+  create_table "orders", force: :cascade do |t|
+    t.bigint "tenant_id", null: false
+    t.bigint "user_id", null: false
+    t.integer "status", default: 0, null: false
+    t.decimal "total_price", precision: 10, scale: 2, null: false
+    t.decimal "discount", precision: 10, scale: 2
+    t.decimal "tax", precision: 10, scale: 2
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["status"], name: "index_orders_on_status"
+    t.index ["tenant_id", "created_at"], name: "index_orders_on_tenant_id_and_created_at"
+    t.index ["tenant_id"], name: "index_orders_on_tenant_id"
+    t.index ["user_id"], name: "index_orders_on_user_id"
+  end
+
+  create_table "tenants", force: :cascade do |t|
     t.string "name", null: false
     t.integer "status", default: 0, null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
-  end
-
-  create_table "roles", force: :cascade do |t|
-    t.string "name"
-    t.bigint "organization_id", null: false
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
-    t.index ["organization_id"], name: "index_roles_on_organization_id"
-  end
-
-  create_table "user_roles", force: :cascade do |t|
-    t.bigint "user_id", null: false
-    t.bigint "role_id", null: false
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
-    t.index ["role_id"], name: "index_user_roles_on_role_id"
-    t.index ["user_id"], name: "index_user_roles_on_user_id"
   end
 
   create_table "users", force: :cascade do |t|
@@ -56,20 +91,18 @@ ActiveRecord::Schema[8.0].define(version: 2026_01_24_075407) do
     t.string "last_name"
     t.boolean "is_active", default: true, null: false
     t.datetime "last_login_time"
-    t.bigint "organization_id", null: false
-    t.bigint "branch_id"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
-    t.index ["branch_id"], name: "index_users_on_branch_id"
     t.index ["email"], name: "index_users_on_email", unique: true
-    t.index ["organization_id"], name: "index_users_on_organization_id"
     t.index ["reset_password_token"], name: "index_users_on_reset_password_token", unique: true
   end
 
-  add_foreign_key "branches", "organizations"
-  add_foreign_key "roles", "organizations"
-  add_foreign_key "user_roles", "roles"
-  add_foreign_key "user_roles", "users"
-  add_foreign_key "users", "branches"
-  add_foreign_key "users", "organizations"
+  add_foreign_key "items", "menus"
+  add_foreign_key "memberships", "tenants"
+  add_foreign_key "memberships", "users"
+  add_foreign_key "menus", "tenants"
+  add_foreign_key "order_items", "items"
+  add_foreign_key "order_items", "orders"
+  add_foreign_key "orders", "tenants"
+  add_foreign_key "orders", "users"
 end

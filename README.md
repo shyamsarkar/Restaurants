@@ -60,71 +60,69 @@ docker-compose up --build
 - Backend will be running at `http://localhost:5000`.
 
 
-organizations
+Final Database Structure
+
+tenants
   └─ id
   └─ name
+  └─ status :integer   # enum: active = 0, inactive = 1, pending = 2
   └─ created_at
   └─ updated_at
-
-users
-  └─ id
-  └─ email
-  └─ encrypted_password
-  └─ reset_password_token
-  └─ reset_password_sent_at
-  └─ remember_created_at
-  └─ organization_id   <-- multi-tenancy link
-  └─ created_at
-  └─ updated_at
-
-
-organizations
-  └─ id
-  └─ name
-  └─ created_at
-  └─ updated_at
-  └─ has_many :users
   └─ has_many :branches
-  └─ has_many :roles
-
-users
-  └─ id
-  └─ email
-  └─ encrypted_password
-  └─ organization_id
-  └─ created_at
-  └─ updated_at
-  └─ has_many :user_roles
-  └─ has_many :roles, through: :user_roles
-  └─ CanCanCan abilities per organization
-
-roles
-  └─ id
-  └─ name                # admin / manager / waiter / cashier
-  └─ organization_id
-  └─ created_at
-  └─ updated_at
-
-user_roles
-  └─ id
-  └─ user_id
-  └─ role_id
-  └─ created_at
-  └─ updated_at
+  └─ has_many :memberships
+  └─ has_many :users, through: :memberships
 
 branches
   └─ id
   └─ name
-  └─ organization_id
+  └─ tenant_id
+  └─ address (optional)
   └─ created_at
   └─ updated_at
   └─ has_many :menus
   └─ has_many :orders
+  └─ has_many :memberships
+  └─ has_many :users, through: :memberships
+
+users (global)
+  └─ id
+  └─ email
+  └─ encrypted_password
+  └─ first_name (optional)
+  └─ last_name (optional)
+  └─ is_active :boolean, default: true
+  └─ last_login_time
+  └─ created_at
+  └─ updated_at
+  └─ has_many :memberships
+  └─ has_many :roles, through: :memberships
+
+✅ No tenant_id or branch_id here. User roles determine access per tenant/branch.
+
+roles (global)
+  └─ id
+  └─ name                 # e.g., admin, manager, waiter, cashier
+  └─ created_at
+  └─ updated_at
+  └─ has_many :memberships
+  └─ has_many :users, through: :memberships
+
+memberships (connects user, role, and optionally tenant/branch)
+  └─ id
+  └─ user_id
+  └─ role_id
+  └─ tenant_id
+  └─ branch_id (optional)        # role scoped to branch
+  └─ created_at
+  └─ updated_at
+
+Example: Alice → admin in Org A (branch_id: null), manager in Branch 1 of Org B.
 
 menus
   └─ id
   └─ name
   └─ branch_id
+  └─ description (optional)
   └─ created_at
   └─ updated_at
   └─ has_many :items
@@ -135,21 +133,24 @@ items
   └─ price
   └─ menu_id
   └─ unit_id
+  └─ description (optional)
   └─ created_at
   └─ updated_at
 
 units
   └─ id
-  └─ name              # e.g., pcs, kg, liter
+  └─ name                  # e.g., pcs, kg, liter
   └─ created_at
   └─ updated_at
 
 orders
   └─ id
-  └─ branch_id
-  └─ user_id            # who created the order
-  └─ status             # pending / completed
+  └─ tenant_id
+  └─ user_id               # who created the order
+  └─ status :integer       # enum: pending=0, preparing=1, completed=2, cancelled=3
   └─ total_price
+  └─ discount (optional)
+  └─ tax (optional)
   └─ created_at
   └─ updated_at
   └─ has_many :order_items
@@ -159,6 +160,6 @@ order_items
   └─ order_id
   └─ item_id
   └─ quantity
-  └─ price              # at the time of order
+  └─ price                 # at the time of order
   └─ created_at
   └─ updated_at
