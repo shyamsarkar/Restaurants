@@ -60,3 +60,105 @@ docker-compose up --build
 - Backend will be running at `http://localhost:5000`.
 
 
+organizations
+  └─ id
+  └─ name
+  └─ created_at
+  └─ updated_at
+
+users
+  └─ id
+  └─ email
+  └─ encrypted_password
+  └─ reset_password_token
+  └─ reset_password_sent_at
+  └─ remember_created_at
+  └─ organization_id   <-- multi-tenancy link
+  └─ created_at
+  └─ updated_at
+
+
+organizations
+  └─ id
+  └─ name
+  └─ created_at
+  └─ updated_at
+  └─ has_many :users
+  └─ has_many :branches
+  └─ has_many :roles
+
+users
+  └─ id
+  └─ email
+  └─ encrypted_password
+  └─ organization_id
+  └─ created_at
+  └─ updated_at
+  └─ has_many :user_roles
+  └─ has_many :roles, through: :user_roles
+  └─ CanCanCan abilities per organization
+
+roles
+  └─ id
+  └─ name                # admin / manager / waiter / cashier
+  └─ organization_id
+  └─ created_at
+  └─ updated_at
+
+user_roles
+  └─ id
+  └─ user_id
+  └─ role_id
+  └─ created_at
+  └─ updated_at
+
+branches
+  └─ id
+  └─ name
+  └─ organization_id
+  └─ created_at
+  └─ updated_at
+  └─ has_many :menus
+  └─ has_many :orders
+
+menus
+  └─ id
+  └─ name
+  └─ branch_id
+  └─ created_at
+  └─ updated_at
+  └─ has_many :items
+
+items
+  └─ id
+  └─ name
+  └─ price
+  └─ menu_id
+  └─ unit_id
+  └─ created_at
+  └─ updated_at
+
+units
+  └─ id
+  └─ name              # e.g., pcs, kg, liter
+  └─ created_at
+  └─ updated_at
+
+orders
+  └─ id
+  └─ branch_id
+  └─ user_id            # who created the order
+  └─ status             # pending / completed
+  └─ total_price
+  └─ created_at
+  └─ updated_at
+  └─ has_many :order_items
+
+order_items
+  └─ id
+  └─ order_id
+  └─ item_id
+  └─ quantity
+  └─ price              # at the time of order
+  └─ created_at
+  └─ updated_at

@@ -2,16 +2,14 @@ require 'sidekiq/web'
 
 Rails.application.routes.draw do
   mount Sidekiq::Web => '/sidekiq'
-  post '/sign_in',  to: 'sessions#create', as: 'sign_in'
-  delete '/sign_out', to: 'sessions#destroy', as: 'sign_out'
+
+  devise_for :users, defaults: { format: :json }
+
   namespace :api do
-    resources :users, only: %i[index new create]
-    resources :dining_tables, only: %i[index create update destroy]
-    resources :orders, only: %i[index show create update destroy]
-    resources :units, only: %i[index show create update destroy]
-    resources :menus, only: %i[index show create update destroy]
-    resources :items, only: %i[index show create update destroy]
-    resources :order_items, only: %i[index show create update destroy]
-    resources :dashboard, only: %i[index]
+    namespace :v1 do
+      resources :organizations, only: [:index, :show, :create, :update]
+      resources :branches, only: [:index, :show, :create, :update]
+      resources :users, only: [:index, :show, :create, :update]
+    end
   end
 end

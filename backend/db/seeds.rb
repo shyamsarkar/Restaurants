@@ -1,13 +1,16 @@
-default_users = [
-  { email: 'superadmin@khaobhai.co.in', name: 'Super Admin' },
-  { email: 'companyadmin1@khaobhai.co.in', name: 'Company Admin1' },
-  { email: 'companyadmin2@khaobhai.co.in', name: 'Company Admin2' },
-  { email: 'branchadmin1@khaobhai.co.in', name: 'Branch Admin1' },
-  { email: 'branchadmin2@khaobhai.co.in', name: 'Branch Admin2' },
-  { email: 'enduser1@khaobhai.co.in', name: 'End User1' },
-  { email: 'enduser2@khaobhai.co.in', name: 'End User2' }
-]
+# Create a demo organization
+org = Organization.create!(name: 'Demo Restaurant')
 
-default_users.each do |user|
-  User.create!(email: user[:email], password: 'Password123', branch: Branch.all.sample)
-end
+# Create a demo branch
+branch = Branch.create!(name: 'Main Branch', organization: org)
+
+# Create an admin user for this org
+User.create!(
+  first_name: 'Admin',
+  last_name: 'User',
+  email: 'admin@demo.com',
+  password: 'password',
+  password_confirmation: 'password',
+  organization: org,
+  branch: branch
+)

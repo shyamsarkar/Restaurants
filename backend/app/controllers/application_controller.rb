@@ -1,17 +1,21 @@
 # frozen_string_literal: true
 
-# handle all loading and authorization
 class ApplicationController < ActionController::Base
-  include Clearance::Controller
+  # For API-style backend
   skip_before_action :verify_authenticity_token
-  before_action :require_login
-  load_and_authorize_resource
 
-  private
+  # Devise authentication
+  before_action :authenticate_user!
 
-  def login_required
-    return if current_user
+  # CanCanCan
+  rescue_from CanCan::AccessDenied do |exception|
+    render json: { error: exception.message }, status: :forbidden
+  end
 
-    render json: { error: 'Authentication required' }, status: :unauthorized
+  protected
+
+  # Optional: expose current ability explicitly (good practice)
+  def current_ability
+    @current_ability ||= Ability.new(current_user)
   end
 end
