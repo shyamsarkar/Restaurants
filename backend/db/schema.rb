@@ -10,81 +10,16 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.0].define(version: 2025_04_11_125032) do
+ActiveRecord::Schema[8.0].define(version: 2026_01_24_075407) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
 
   create_table "branches", force: :cascade do |t|
     t.string "name", null: false
-    t.integer "status", default: 0, null: false
     t.bigint "organization_id", null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.index ["organization_id"], name: "index_branches_on_organization_id"
-  end
-
-  create_table "dining_tables", force: :cascade do |t|
-    t.string "name", null: false
-    t.boolean "is_deleted", default: false, null: false
-    t.bigint "user_id", null: false
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
-    t.index ["user_id"], name: "index_dining_tables_on_user_id"
-  end
-
-  create_table "items", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
-    t.string "name", null: false
-    t.decimal "price", precision: 10, scale: 2, null: false
-    t.boolean "is_deleted", default: false, null: false
-    t.uuid "menu_id", null: false
-    t.bigint "unit_id", null: false
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
-    t.index ["menu_id"], name: "index_items_on_menu_id"
-    t.index ["unit_id"], name: "index_items_on_unit_id"
-  end
-
-  create_table "menus", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
-    t.string "name", null: false
-    t.boolean "is_deleted", default: false, null: false
-    t.bigint "user_id", null: false
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
-    t.index ["user_id"], name: "index_menus_on_user_id"
-  end
-
-  create_table "order_items", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
-    t.integer "quantity", default: 1, null: false
-    t.decimal "price", precision: 10, scale: 2, null: false
-    t.decimal "total", precision: 10, scale: 2, null: false
-    t.decimal "discount", precision: 10, scale: 2, default: "0.0", null: false
-    t.decimal "tax", precision: 10, scale: 2, default: "0.0", null: false
-    t.string "unit_name", null: false
-    t.uuid "order_id"
-    t.uuid "item_id", null: false
-    t.bigint "dining_table_id", null: false
-    t.bigint "user_id", null: false
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
-    t.index ["dining_table_id"], name: "index_order_items_on_dining_table_id"
-    t.index ["item_id"], name: "index_order_items_on_item_id"
-    t.index ["order_id"], name: "index_order_items_on_order_id"
-    t.index ["user_id"], name: "index_order_items_on_user_id"
-  end
-
-  create_table "orders", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
-    t.string "order_number", null: false
-    t.decimal "total_amount", precision: 10, scale: 2, null: false
-    t.decimal "total_discount", precision: 10, scale: 2, null: false
-    t.decimal "total_tax", precision: 10, scale: 2, null: false
-    t.decimal "payable_amount", precision: 10, scale: 2, null: false
-    t.integer "status", default: 0, null: false
-    t.bigint "dining_table_id", null: false
-    t.bigint "user_id", null: false
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
-    t.index ["dining_table_id"], name: "index_orders_on_dining_table_id"
-    t.index ["user_id"], name: "index_orders_on_user_id"
   end
 
   create_table "organizations", force: :cascade do |t|
@@ -95,18 +30,11 @@ ActiveRecord::Schema[8.0].define(version: 2025_04_11_125032) do
   end
 
   create_table "roles", force: :cascade do |t|
-    t.string "name", null: false
+    t.string "name"
+    t.bigint "organization_id", null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
-  end
-
-  create_table "units", force: :cascade do |t|
-    t.string "name", null: false
-    t.boolean "is_deleted", default: false, null: false
-    t.bigint "user_id", null: false
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
-    t.index ["user_id"], name: "index_units_on_user_id"
+    t.index ["organization_id"], name: "index_roles_on_organization_id"
   end
 
   create_table "user_roles", force: :cascade do |t|
@@ -119,38 +47,29 @@ ActiveRecord::Schema[8.0].define(version: 2025_04_11_125032) do
   end
 
   create_table "users", force: :cascade do |t|
+    t.string "email", default: "", null: false
+    t.string "encrypted_password", default: "", null: false
+    t.string "reset_password_token"
+    t.datetime "reset_password_sent_at"
+    t.datetime "remember_created_at"
     t.string "first_name"
     t.string "last_name"
-    t.string "email", null: false
-    t.string "encrypted_password", limit: 128, null: false
-    t.string "confirmation_token", limit: 128
-    t.string "remember_token", limit: 128, null: false
     t.boolean "is_active", default: true, null: false
     t.datetime "last_login_time"
-    t.integer "failed_login_attempts", default: 0
-    t.bigint "branch_id", null: false
-    t.datetime "last_failed_login_at"
+    t.bigint "organization_id", null: false
+    t.bigint "branch_id"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.index ["branch_id"], name: "index_users_on_branch_id"
-    t.index ["confirmation_token"], name: "index_users_on_confirmation_token", unique: true
-    t.index ["email"], name: "index_users_on_email"
-    t.index ["remember_token"], name: "index_users_on_remember_token", unique: true
+    t.index ["email"], name: "index_users_on_email", unique: true
+    t.index ["organization_id"], name: "index_users_on_organization_id"
+    t.index ["reset_password_token"], name: "index_users_on_reset_password_token", unique: true
   end
 
   add_foreign_key "branches", "organizations"
-  add_foreign_key "dining_tables", "users"
-  add_foreign_key "items", "menus"
-  add_foreign_key "items", "units"
-  add_foreign_key "menus", "users"
-  add_foreign_key "order_items", "dining_tables"
-  add_foreign_key "order_items", "items"
-  add_foreign_key "order_items", "orders"
-  add_foreign_key "order_items", "users"
-  add_foreign_key "orders", "dining_tables"
-  add_foreign_key "orders", "users"
-  add_foreign_key "units", "users"
+  add_foreign_key "roles", "organizations"
   add_foreign_key "user_roles", "roles"
   add_foreign_key "user_roles", "users"
   add_foreign_key "users", "branches"
+  add_foreign_key "users", "organizations"
 end
