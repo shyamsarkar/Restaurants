@@ -14,14 +14,11 @@ class User < ApplicationRecord
 
   # Track last login
   def update_last_login!
-    update_column(:last_login_time, Time.current)
+    update!(last_login_time: Time.current)
   end
 
   # Check if user has a specific role in a specific tenant
-  def has_role?(role_name, tenant:)
-    memberships.joins(:role).exists?(
-      roles: { name: role_name.to_s },
-      tenant_id: tenant.id
-    )
+  def role?(role_name, tenant:)
+    memberships.exists?(tenant: tenant, role: role_name)
   end
 end

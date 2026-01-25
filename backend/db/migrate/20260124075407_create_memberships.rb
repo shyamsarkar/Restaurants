@@ -7,5 +7,7 @@ class CreateMemberships < ActiveRecord::Migration[8.0]
 
       t.timestamps
     end
+
+    add_index :memberships, %i[user_id tenant_id], unique: true
   end
 end
