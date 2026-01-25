@@ -10,10 +10,7 @@ module Api
 
         def respond_with(resource, _opts = {})
           render json: {
-            user: {
-              id: resource.id,
-              email: resource.email
-            },
+            user: resource.slice(:id, :email, :first_name, :last_name, :is_active, :last_login_time),
             message: 'Signed in successfully'
           }, status: :ok
         end

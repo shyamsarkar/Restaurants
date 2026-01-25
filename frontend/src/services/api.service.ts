@@ -57,9 +57,9 @@ export const apiClient = async <TResponse>({
 export const loginUser = async (email: string, password: string) => {
   return apiClient<{ user: AuthUser }>({
     method: "post",
-    url: "/sign_in",
+    url: "/users/sign_in",
     data: {
-      session: {
+      user: {
         email,
         password,
       },
