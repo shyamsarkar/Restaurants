@@ -8,6 +8,14 @@ interface ApiRequestParams {
   data?: unknown;
   params?: unknown;
 }
+export interface User {
+  id: number;
+  name: string;
+  email: string;
+  role: string;
+  status: string;
+  avatar: string;
+}
 
 export interface DiningTable {
   id: number;
@@ -70,9 +78,16 @@ export const loginUser = async (email: string, password: string) => {
 export const logoutUser = async () => {
   return apiClient<void>({
     method: "delete",
-    url: "/sign_out",
+    url: "/users/sign_out",
   });
 };
+
+export const getUsers = async () => {
+  return apiClient<User[]>({
+    method: "get",
+    url: "/api/v1/users",
+  })
+}
 
 export const getDashboardData = async () => {
   return apiClient<void>({

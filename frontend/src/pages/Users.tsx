@@ -1,14 +1,23 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { Search, Add, MoreHoriz, Mail, Phone } from '@mui/icons-material';
+import { getUsers, User } from '@/services/api.service';
 
 const Users: React.FC = () => {
-  const users = [
-    { id: 1, name: 'Sarah Johnson', email: 'sarah.j@company.com', role: 'Administrator', status: 'Active', avatar: '👩‍💼' },
-    { id: 2, name: 'Mike Chen', email: 'mike.chen@company.com', role: 'Editor', status: 'Active', avatar: '👨‍💻' },
-    { id: 3, name: 'Emma Davis', email: 'emma.davis@company.com', role: 'Viewer', status: 'Inactive', avatar: '👩‍🎨' },
-    { id: 4, name: 'Alex Smith', email: 'alex.smith@company.com', role: 'Editor', status: 'Active', avatar: '👨‍🚀' },
-    { id: 5, name: 'Lisa Wang', email: 'lisa.wang@company.com', role: 'Administrator', status: 'Active', avatar: '👩‍🔬' },
-  ];
+  const [users, setUsers] = React.useState<User[]>([]);  
+
+  useEffect(() => {
+    const fetchUsers = async () => {
+      try {
+        const users = await getUsers();
+        debugger;
+        setUsers(users);
+      } catch (error) {
+        console.error('Error fetching users:', error);
+      }
+    };
+    
+    fetchUsers();
+  }, []);
 
   return (
     <div className="space-y-8">

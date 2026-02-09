@@ -1,4 +1,5 @@
 # app/controllers/api/v1/tenants_controller.rb
+
 module Api
   module V1
     class TenantsController < ApplicationController
@@ -16,7 +17,7 @@ module Api
         if @tenant.save
           render json: @tenant, status: :created
         else
-          render json: { errors: @tenant.errors.full_messages }, status: :unprocessable_entity
+          render json: { errors: @tenant.errors.full_messages }, status: :unprocessable_content
         end
       end
 
@@ -24,7 +25,7 @@ module Api
         if @tenant.update(tenant_params)
           render json: @tenant
         else
-          render json: { errors: @tenant.errors.full_messages }, status: :unprocessable_entity
+          render json: { errors: @tenant.errors.full_messages }, status: :unprocessable_content
         end
       end
 

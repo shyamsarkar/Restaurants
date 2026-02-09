@@ -17,7 +17,6 @@ class User < ApplicationRecord
     update!(last_login_time: Time.current)
   end
 
-  # Check if user has a specific role in a specific tenant
   def role?(role_name, tenant:)
     memberships.exists?(tenant: tenant, role: role_name)
   end

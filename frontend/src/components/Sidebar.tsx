@@ -27,7 +27,7 @@ const menuItems = [
   { icon: TableRestaurant, label: 'Table', path: `${basePath}/tables` },
   { icon: MenuBook, label: 'Menu', path: `${basePath}/menu` },
   { icon: ChecklistRtl, label: 'Items', path: `${basePath}/items` },
-  { icon: Scale, label: 'Units', path: `${basePath}/units` },
+  { icon: Scale, label: '---', path: `${basePath}/units` },
   { icon: BarChart, label: 'Analytics', path: `${basePath}/analytics` },
   { icon: People, label: 'Users', path: `${basePath}/users` },
   { icon: FolderOpen, label: 'Projects', path: `${basePath}/projects` },
