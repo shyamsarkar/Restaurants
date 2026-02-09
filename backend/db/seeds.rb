@@ -2,7 +2,7 @@
 
 # Clear Existing Data
 if Rails.env.development?
-  puts "Cleaning database..."
+  puts 'Cleaning database...'
   OrderItem.destroy_all
   Order.destroy_all
   Item.destroy_all
@@ -10,11 +10,11 @@ if Rails.env.development?
   Membership.destroy_all
   Tenant.destroy_all
   User.destroy_all
-  
-  puts "Database cleaned!"
+
+  puts 'Database cleaned!'
 end
 
-puts "Creating users..."
+puts 'Creating users...'
 
 # Create admin user
 admin = User.create!(
@@ -34,14 +34,14 @@ users = []
     password: 'password123',
     password_confirmation: 'password123',
     first_name: "User#{i + 1}",
-    last_name: "Test",
+    last_name: 'Test',
     is_active: true
   )
 end
 
 puts "Created #{User.count} users"
 
-puts "Creating tenants..."
+puts 'Creating tenants...'
 
 # Create tenants
 tenant1 = Tenant.create!(
@@ -54,14 +54,14 @@ tenant2 = Tenant.create!(
   status: :active
 )
 
-tenant3 = Tenant.create!(
+Tenant.create!(
   name: 'Coastal Bistro',
   status: :pending
 )
 
 puts "Created #{Tenant.count} tenants"
 
-puts "Creating memberships..."
+puts 'Creating memberships...'
 
 # Create memberships for tenant1
 Membership.create!(user: admin, tenant: tenant1, role: :admin)
@@ -79,7 +79,7 @@ Membership.create!(user: users[0], tenant: tenant2, role: :waiter)
 
 puts "Created #{Membership.count} memberships"
 
-puts "Creating menus..."
+puts 'Creating menus...'
 
 # Menus for tenant1
 breakfast_menu = Menu.create!(
@@ -115,7 +115,7 @@ beverages_menu = Menu.create!(
 
 puts "Created #{Menu.count} menus"
 
-puts "Creating items..."
+puts 'Creating items...'
 
 # Breakfast items for tenant1
 Item.create!(
@@ -259,7 +259,7 @@ Item.create!(
 
 puts "Created #{Item.count} items"
 
-puts "Creating orders..."
+puts 'Creating orders...'
 
 # Create orders for tenant1
 order1 = Order.create!(
@@ -320,9 +320,9 @@ OrderItem.create!(order: order4, item: Item.find_by(name: 'Fresh Orange Juice'),
 
 puts "Created #{Order.count} orders with #{OrderItem.count} order items"
 
-puts "\n" + "="*50
-puts "SEED DATA SUMMARY"
-puts "="*50
+puts "\n" + ('=' * 50)
+puts 'SEED DATA SUMMARY'
+puts '=' * 50
 puts "Users: #{User.count}"
 puts "Tenants: #{Tenant.count}"
 puts "Memberships: #{Membership.count}"
@@ -330,9 +330,9 @@ puts "Menus: #{Menu.count}"
 puts "Items: #{Item.count}"
 puts "Orders: #{Order.count}"
 puts "Order Items: #{OrderItem.count}"
-puts "="*50
+puts '=' * 50
 
 puts "\nLogin credentials:"
-puts "Admin: admin@example.com / password123"
-puts "Users: user1@example.com to user5@example.com / password123"
+puts 'Admin: admin@example.com / password123'
+puts 'Users: user1@example.com to user5@example.com / password123'
 puts "\nSeeding completed successfully! 🎉"

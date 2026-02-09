@@ -3,10 +3,10 @@ Points To Address
 2. 
 
 
-# Getting Started with Restaurenats
+# Getting Started with Restaurents
 
 ## Description
-This project is aimed at creating a full-stack web application with separate folders for the backend using Rails (Ruby 3.3.0) and the frontend using ReactJS (Node.js 21.7.3).
+This project is aimed at creating a full-stack web application with separate folders for the backend using Rails (Ruby 4.0.1) and the frontend using ReactJS (Node.js 25.3.0).
 
 ## Installation
 To get started with this project, follow these steps:
@@ -68,19 +68,6 @@ tenants
   └─ status :integer   # enum: active = 0, inactive = 1, pending = 2
   └─ created_at
   └─ updated_at
-  └─ has_many :branches
-  └─ has_many :memberships
-  └─ has_many :users, through: :memberships
-
-branches
-  └─ id
-  └─ name
-  └─ tenant_id
-  └─ address (optional)
-  └─ created_at
-  └─ updated_at
-  └─ has_many :menus
-  └─ has_many :orders
   └─ has_many :memberships
   └─ has_many :users, through: :memberships
 
@@ -97,31 +84,17 @@ users (global)
   └─ has_many :memberships
   └─ has_many :roles, through: :memberships
 
-✅ No tenant_id or branch_id here. User roles determine access per tenant/branch.
-
-roles (global)
-  └─ id
-  └─ name                 # e.g., admin, manager, waiter, cashier
-  └─ created_at
-  └─ updated_at
-  └─ has_many :memberships
-  └─ has_many :users, through: :memberships
-
-memberships (connects user, role, and optionally tenant/branch)
+memberships (connects user, role, and optionally tenant)
   └─ id
   └─ user_id
   └─ role_id
   └─ tenant_id
-  └─ branch_id (optional)        # role scoped to branch
   └─ created_at
   └─ updated_at
-
-Example: Alice → admin in Org A (branch_id: null), manager in Branch 1 of Org B.
 
 menus
   └─ id
   └─ name
-  └─ branch_id
   └─ description (optional)
   └─ created_at
   └─ updated_at

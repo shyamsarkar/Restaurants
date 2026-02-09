@@ -1,7 +1,6 @@
 # frozen_string_literal: true
 
 class ApplicationController < ActionController::Base
-  # For API-style backend
   skip_before_action :verify_authenticity_token
 
   # Devise authentication
@@ -19,4 +18,3 @@ class ApplicationController < ActionController::Base
     @current_ability ||= Ability.new(current_user)
   end
 end
-
