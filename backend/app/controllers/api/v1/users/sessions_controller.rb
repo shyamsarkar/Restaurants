@@ -6,6 +6,7 @@ module Api
       class SessionsController < Devise::SessionsController
         respond_to :json
         skip_before_action :verify_authenticity_token, raise: false
+        skip_before_action :set_current_context, only: [:create]
 
         private
 
@@ -14,6 +15,7 @@ module Api
 
           render json: {
             user: resource.slice(:id, :email, :first_name, :last_name, :is_active, :last_login_time),
+            tenant: resource.tenants.first,
             message: 'Signed in successfully'
           }, status: :ok
         end

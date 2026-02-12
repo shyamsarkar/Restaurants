@@ -5,6 +5,7 @@ class ApplicationController < ActionController::Base
 
   # Devise authentication
   before_action :authenticate_user!
+  before_action :set_current_context
 
   # CanCanCan
   rescue_from CanCan::AccessDenied do |exception|
@@ -15,6 +16,29 @@ class ApplicationController < ActionController::Base
 
   # Optional: expose current ability explicitly (good practice)
   def current_ability
-    @current_ability ||= Ability.new(current_user)
+    @current_ability ||= Ability.new(current_user, Current.tenant)
+  end
+
+  private
+
+  def set_current_context
+    Current.user = current_user
+
+    tenant_id = request.headers['X-Tenant-ID']
+
+    if tenant_id.blank?
+      render json: { error: 'Tenant not selected' }, status: :forbidden
+      return
+    end
+
+    Current.membership = current_user.memberships
+                                     .includes(:tenant)
+                                     .find_by!(tenant_id: tenant_id)
+
+    Current.tenant = Current.membership.tenant
+
+    return if Current.tenant.active?
+
+    render json: { error: 'Tenant inactive' }, status: :forbidden
   end
 end

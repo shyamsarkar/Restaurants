@@ -3,20 +3,16 @@
 class Ability
   include CanCan::Ability
 
-  def initialize(user)
-    return unless user
+  def initialize(user, tenant)
+    return unless user && tenant
 
-    # 🔑 Super Admin
-    if user.has_role?(:super_admin)
-      can :manage, :all
-      return
+    membership = user.memberships.find_by(tenant: tenant)
+    return unless membership
+
+    if membership.admin?
+      can :manage, User, memberships: { tenant_id: tenant.id }
+    else
+      can :read, User, memberships: { tenant_id: tenant.id }
     end
-
-    can %i[show update destroy], Tenant, id: user.tenant_id
-    can :manage, User, tenant_id: user.tenant_id
-
-    # 🍽 Future models — add ONLY when they exist
-    can :manage, Menu, branch: { tenant_id: user.tenant_id } if defined?(Menu)
-    can :manage, Item, branch: { tenant_id: user.tenant_id } if defined?(Item)
   end
 end

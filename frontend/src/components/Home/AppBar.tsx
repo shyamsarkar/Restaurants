@@ -13,7 +13,7 @@ import { logoutUser } from '@/services/api.service';
 
 function ResponsiveAppBar() {
   const user = useAuthStore((state) => state.user);
-  const setUser = useAuthStore((state) => state.setUser);
+  const clearAuth = useAuthStore((state) => state.clearAuth);
   const [anchorElUser, setAnchorElUser] = React.useState<null | HTMLElement>(null);
 
   const handleOpenUserMenu = (event: React.MouseEvent<HTMLElement>) => {
@@ -23,7 +23,7 @@ function ResponsiveAppBar() {
   const handleLogout = async () => {
     await logoutUser();
     setAnchorElUser(null);
-    setUser(null);
+    clearAuth();
   };
 
   return (

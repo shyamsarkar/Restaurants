@@ -12,23 +12,26 @@ interface ProfileDropdownProps {
 
 const ProfileDropdown: React.FC<ProfileDropdownProps> = ({ onClose }) => {
   const showSidebar = useCommonStore((state) => state.showSidebar);
-  const setUser = useAuthStore((state)=> state.setUser)
+  const clearAuth = useAuthStore((state) => state.clearAuth)
   const navigate = useNavigate()
   const handleLogout = async () => {
-    try{
-    await logoutUser();
-    setUser(null);
+    try {
+      await logoutUser();
     }
-    catch{
+    catch {
       console.log("Unable to logout");
+    }
+    finally {
+      clearAuth();
+      window.location.href = '/login'
     }
   }
   const gotoSettings = () => {
-    navigate('/settings');
+    navigate('restaurants/settings');
   }
 
   const gotoNotification = () => {
-    navigate('/notification');
+    navigate('restaurants/notification');
   }
 
   const menuItems = [
@@ -49,7 +52,7 @@ const ProfileDropdown: React.FC<ProfileDropdownProps> = ({ onClose }) => {
       <div className={`absolute bottom-full mb-2 ${showSidebar ? 'left-0' : 'left-full ml-2'} w-56 bg-white rounded-lg shadow-lg border border-gray-200 py-2 z-50`}>
         {/* Profile Header */}
         <div className="flex flex-col items-center px-1 py-3 border-b border-gray-100">
-          <span className="text-lg font-medium text-gray-900 ml-1">Administrator</span>
+          <span className="text-lg font-medium text-gray-900 ml-1">Tenant Name</span>
           <span className="text-xs text-gray-500 mt-1">shyamsarkar@github.com</span>
         </div>
 

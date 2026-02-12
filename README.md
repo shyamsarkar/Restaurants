@@ -9,7 +9,7 @@ Points To Address
 This project is aimed at creating a full-stack web application with separate folders for the backend using Rails (Ruby 4.0.1) and the frontend using ReactJS (Node.js 25.3.0).
 
 ## Usage
-- Once both the backend and frontend servers are running, you can access the application at `http://localhost:8000`.
+- Once both the backend and frontend servers are running, you can access the application at `http://localhost:5173`.
 - Use the frontend to interact with the application's user interface.
 - The frontend communicates with the backend through API endpoints.
 - Backend will be running at `http://localhost:3000`.
@@ -43,6 +43,7 @@ memberships (connects user, tenant)
   └─ id
   └─ user_id
   └─ tenant_id
+  └─ role           # enum
   └─ created_at
   └─ updated_at
 

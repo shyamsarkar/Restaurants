@@ -10,23 +10,37 @@ const api = axios.create({
   withCredentials: true,
 });
 
+
+api.interceptors.request.use((config) => {
+  const tenantId = useAuthStore.getState().tenantId
+
+  if (tenantId) {
+    config.headers['X-Tenant-ID'] = tenantId
+  }
+
+  return config
+})
+
 api.interceptors.response.use(
   (response) => response,
   (error: AxiosError) => {
     const status = error.response?.status;
+    const authStore = useAuthStore.getState()
+
     if (status === 401) {
-      useAuthStore.getState().setUser(null);
+      authStore.clearAuth();
       window.location.href = '/login';
     }
 
     if (status === 403) {
+      authStore.setTenantId(null);
+
+      // window.location.href = '/select-tenant'
       window.history.back();
     }
 
-    return Promise.reject(error);
+    return Promise.reject(error)
   }
-);
+)
 
-
-
-export default api;
+export default api
