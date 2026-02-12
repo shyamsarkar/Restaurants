@@ -33,7 +33,7 @@ api.interceptors.response.use(
     }
 
     if (status === 403) {
-      authStore.setTenantId(null);
+      // authStore.setTenantId(null);
 
       // window.location.href = '/select-tenant'
       window.history.back();

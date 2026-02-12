@@ -124,6 +124,7 @@ Item.create!(
   unit: 'piece',
   description: 'Crispy rice crepe with spiced potato filling',
   menu: breakfast_menu,
+  tenant: breakfast_menu.tenant,
   is_available: true
 )
 
@@ -133,6 +134,7 @@ Item.create!(
   unit: 'plate',
   description: 'Steamed rice cakes with lentil soup',
   menu: breakfast_menu,
+  tenant: breakfast_menu.tenant,
   is_available: true
 )
 
@@ -142,6 +144,7 @@ Item.create!(
   unit: 'plate',
   description: 'Flattened rice with vegetables',
   menu: breakfast_menu,
+  tenant: breakfast_menu.tenant,
   is_available: true
 )
 
@@ -152,6 +155,7 @@ Item.create!(
   unit: 'plate',
   description: 'Aromatic basmati rice with tender chicken',
   menu: lunch_menu,
+  tenant: lunch_menu.tenant,
   is_available: true
 )
 
@@ -161,6 +165,7 @@ Item.create!(
   unit: 'bowl',
   description: 'Cottage cheese in rich tomato gravy',
   menu: lunch_menu,
+  tenant: lunch_menu.tenant,
   is_available: true
 )
 
@@ -170,6 +175,7 @@ Item.create!(
   unit: 'bowl',
   description: 'Yellow lentils tempered with spices',
   menu: lunch_menu,
+  tenant: lunch_menu.tenant,
   is_available: true
 )
 
@@ -179,6 +185,7 @@ Item.create!(
   unit: 'piece',
   description: 'Traditional Indian flatbread',
   menu: lunch_menu,
+  tenant: lunch_menu.tenant,
   is_available: true
 )
 
@@ -189,6 +196,7 @@ Item.create!(
   unit: 'plate',
   description: 'Grilled chicken marinated in yogurt and spices',
   menu: dinner_menu,
+  tenant: dinner_menu.tenant,
   is_available: true
 )
 
@@ -198,6 +206,7 @@ Item.create!(
   unit: 'bowl',
   description: 'Fresh fish in coconut curry sauce',
   menu: dinner_menu,
+  tenant: dinner_menu.tenant,
   is_available: true
 )
 
@@ -208,6 +217,7 @@ Item.create!(
   unit: 'bowl',
   description: 'Romaine lettuce with Caesar dressing',
   menu: cafe_menu,
+  tenant: cafe_menu.tenant,
   is_available: true
 )
 
@@ -217,6 +227,7 @@ Item.create!(
   unit: 'piece',
   description: 'Classic pizza with tomato, mozzarella, and basil',
   menu: cafe_menu,
+  tenant: cafe_menu.tenant,
   is_available: true
 )
 
@@ -226,6 +237,7 @@ Item.create!(
   unit: 'plate',
   description: 'Creamy white sauce pasta',
   menu: cafe_menu,
+  tenant: cafe_menu.tenant,
   is_available: true
 )
 
@@ -236,6 +248,7 @@ Item.create!(
   unit: 'piece',
   description: 'Espresso with steamed milk foam',
   menu: beverages_menu,
+  tenant: beverages_menu.tenant,
   is_available: true
 )
 
@@ -245,6 +258,7 @@ Item.create!(
   unit: 'ml',
   description: 'Freshly squeezed orange juice',
   menu: beverages_menu,
+  tenant: beverages_menu.tenant,
   is_available: true
 )
 
@@ -254,6 +268,7 @@ Item.create!(
   unit: 'piece',
   description: 'Indian spiced tea',
   menu: beverages_menu,
+  tenant: beverages_menu.tenant,
   is_available: true
 )
 

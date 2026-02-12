@@ -7,6 +7,7 @@ class CreateItems < ActiveRecord::Migration[8.0]
       t.string :description
       t.boolean :is_available, null: false, default: true
       t.references :menu, null: false, foreign_key: true
+      t.references :tenant, null: false, foreign_key: true
 
       t.timestamps
     end

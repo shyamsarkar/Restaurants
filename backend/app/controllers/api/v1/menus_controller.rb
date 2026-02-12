@@ -1,4 +1,5 @@
 # frozen_string_literal: true
+
 class Api::V1::MenusController < ApplicationController
   load_and_authorize_resource
 
@@ -10,7 +11,7 @@ class Api::V1::MenusController < ApplicationController
     if @menu.save
       render json: @menu, status: :created
     else
-      render json: { errors: @menu.errors.full_messages }, status: :unprocessable_entity
+      render json: { errors: @menu.errors.full_messages }, status: :unprocessable_content
     end
   end
 

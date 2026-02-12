@@ -63,7 +63,7 @@ export const apiClient = async <TResponse>({
 };
 
 export const loginUser = async (email: string, password: string) => {
-  return apiClient<{ user: AuthUser }>({
+  return apiClient<{ user: AuthUser, tenant: { id: string, name: string } }>({
     method: "post",
     url: "/users/sign_in",
     data: {
@@ -86,6 +86,13 @@ export const getUsers = async () => {
   return apiClient<User[]>({
     method: "get",
     url: "/api/v1/users",
+  })
+}
+
+export const getTenants = async () => {
+  return apiClient<{ id: string, name: string }[]>({
+    method: "get",
+    url: "/api/v1/tenants",
   })
 }
 
@@ -132,7 +139,7 @@ export const deleteDiningTable = async (table_id: number | string) => {
 export const getMenus = async () => {
   return apiClient<Menu[]>({
     method: "get",
-    url: "/api/menus",
+    url: "/api/v1/menus",
   });
 };
 
@@ -165,7 +172,7 @@ export const deleteMenu = async (table_id: number | string) => {
 export const getMenuItems = async () => {
   return apiClient<MenuItem[]>({
     method: "get",
-    url: "/api/items",
+    url: "/api/v1/items",
   });
 };
 

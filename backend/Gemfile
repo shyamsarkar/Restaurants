@@ -23,6 +23,9 @@ gem 'acts_as_tenant'
 # Monitoring
 gem 'honeybadger'
 
+# Additional gems
+gem 'jsonapi-serializer'
+
 group :development, :test do
   gem 'dotenv-rails'
   gem 'factory_bot_rails'

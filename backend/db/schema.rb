@@ -21,10 +21,12 @@ ActiveRecord::Schema[8.0].define(version: 2026_01_24_150231) do
     t.string "description"
     t.boolean "is_available", default: true, null: false
     t.bigint "menu_id", null: false
+    t.bigint "tenant_id", null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.index ["menu_id", "name"], name: "index_items_on_menu_id_and_name"
     t.index ["menu_id"], name: "index_items_on_menu_id"
+    t.index ["tenant_id"], name: "index_items_on_tenant_id"
   end
 
   create_table "memberships", force: :cascade do |t|
@@ -99,6 +101,7 @@ ActiveRecord::Schema[8.0].define(version: 2026_01_24_150231) do
   end
 
   add_foreign_key "items", "menus"
+  add_foreign_key "items", "tenants"
   add_foreign_key "memberships", "tenants"
   add_foreign_key "memberships", "users"
   add_foreign_key "menus", "tenants"

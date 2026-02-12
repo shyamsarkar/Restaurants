@@ -13,6 +13,8 @@ Rails.application.routes.draw do
     namespace :v1 do
       resources :tenants, only: %i[index show create update destroy]
       resources :users, only: %i[index show create update destroy]
+      resources :menus
+      resources :items
     end
   end
 end

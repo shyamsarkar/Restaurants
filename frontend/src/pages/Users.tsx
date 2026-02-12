@@ -9,7 +9,6 @@ const Users: React.FC = () => {
     const fetchUsers = async () => {
       try {
         const users = await getUsers();
-        debugger;
         setUsers(users);
       } catch (error) {
         console.error('Error fetching users:', error);
