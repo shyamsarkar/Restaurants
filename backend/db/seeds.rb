@@ -5,6 +5,7 @@ if Rails.env.development?
   puts 'Cleaning database...'
   OrderItem.destroy_all
   Order.destroy_all
+  DiningTable.destroy_all
   Item.destroy_all
   Menu.destroy_all
   Membership.destroy_all
@@ -60,6 +61,42 @@ Tenant.create!(
 )
 
 puts "Created #{Tenant.count} tenants"
+
+puts 'Creating dining tables...'
+
+# Tables for tenant1
+t1_table1 = DiningTable.create!(
+  tenant: tenant1,
+  name: 'T1',
+  status: :available
+)
+
+t1_table2 = DiningTable.create!(
+  tenant: tenant1,
+  name: 'T2',
+  status: :occupied
+)
+
+t1_table3 = DiningTable.create!(
+  tenant: tenant1,
+  name: 'T3',
+  status: :reserved
+)
+
+# Tables for tenant2
+t2_table1 = DiningTable.create!(
+  tenant: tenant2,
+  name: 'A1',
+  status: :available
+)
+
+t2_table2 = DiningTable.create!(
+  tenant: tenant2,
+  name: 'A2',
+  status: :cleaning
+)
+
+puts "Created #{DiningTable.count} dining tables"
 
 puts 'Creating memberships...'
 
@@ -280,6 +317,7 @@ puts 'Creating orders...'
 order1 = Order.create!(
   tenant: tenant1,
   user: users[1], # waiter
+  dining_table: t1_table2,
   status: :completed,
   total_price: 0,
   discount: 20.00,
@@ -295,6 +333,7 @@ OrderItem.create!(order: order1, item: Item.find_by(name: 'Dal Tadka'), quantity
 order2 = Order.create!(
   tenant: tenant1,
   user: users[1],
+  dining_table: t1_table2,
   status: :preparing,
   total_price: 0,
   tax: 18.00
@@ -308,7 +347,8 @@ OrderItem.create!(order: order2, item: Item.find_by(name: 'Idli Sambar'), quanti
 # Create orders for tenant2
 order3 = Order.create!(
   tenant: tenant2,
-  user: users[4], # waiter
+  user: users[4],
+  dining_table: t2_table1,
   status: :completed,
   total_price: 0,
   discount: 50.00,
@@ -323,6 +363,7 @@ OrderItem.create!(order: order3, item: Item.find_by(name: 'Cappuccino'), quantit
 order4 = Order.create!(
   tenant: tenant2,
   user: users[4],
+  dining_table: t2_table1,
   status: :pending,
   total_price: 0,
   tax: 15.00

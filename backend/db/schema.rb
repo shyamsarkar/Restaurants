@@ -14,6 +14,16 @@ ActiveRecord::Schema[8.0].define(version: 2026_01_24_150231) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
 
+  create_table "dining_tables", force: :cascade do |t|
+    t.bigint "tenant_id", null: false
+    t.string "name", null: false
+    t.integer "status", default: 0, null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["tenant_id", "name"], name: "index_dining_tables_on_tenant_id_and_name", unique: true
+    t.index ["tenant_id"], name: "index_dining_tables_on_tenant_id"
+  end
+
   create_table "items", force: :cascade do |t|
     t.string "name", null: false
     t.decimal "price", precision: 10, scale: 2, null: false
@@ -65,12 +75,14 @@ ActiveRecord::Schema[8.0].define(version: 2026_01_24_150231) do
   create_table "orders", force: :cascade do |t|
     t.bigint "tenant_id", null: false
     t.bigint "user_id", null: false
+    t.bigint "dining_table_id"
     t.integer "status", default: 0, null: false
     t.decimal "total_price", precision: 10, scale: 2, null: false
     t.decimal "discount", precision: 10, scale: 2
     t.decimal "tax", precision: 10, scale: 2
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.index ["dining_table_id"], name: "index_orders_on_dining_table_id"
     t.index ["status"], name: "index_orders_on_status"
     t.index ["tenant_id", "created_at"], name: "index_orders_on_tenant_id_and_created_at"
     t.index ["tenant_id"], name: "index_orders_on_tenant_id"
@@ -100,6 +112,7 @@ ActiveRecord::Schema[8.0].define(version: 2026_01_24_150231) do
     t.index ["reset_password_token"], name: "index_users_on_reset_password_token", unique: true
   end
 
+  add_foreign_key "dining_tables", "tenants"
   add_foreign_key "items", "menus"
   add_foreign_key "items", "tenants"
   add_foreign_key "memberships", "tenants"
@@ -107,6 +120,7 @@ ActiveRecord::Schema[8.0].define(version: 2026_01_24_150231) do
   add_foreign_key "menus", "tenants"
   add_foreign_key "order_items", "items"
   add_foreign_key "order_items", "orders"
+  add_foreign_key "orders", "dining_tables"
   add_foreign_key "orders", "tenants"
   add_foreign_key "orders", "users"
 end

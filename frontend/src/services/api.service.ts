@@ -106,14 +106,14 @@ export const getDashboardData = async () => {
 export const getDiningTables = async () => {
   return apiClient<DiningTable[]>({
     method: "get",
-    url: "/api/dining_tables",
+    url: "/api/v1/dining_tables",
   });
 };
 
 export const createDiningTable = async (data: { name: string }) => {
   return apiClient<DiningTable>({
     method: "post",
-    url: "/api/dining_tables",
+    url: "/api/v1/dining_tables",
     data,
   });
 };

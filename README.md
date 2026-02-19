@@ -1,9 +1,4 @@
-Points To Address
-1. fix the role method
-2. issue with ability which role to select according to tenant
-3. 
-
-# Getting Started with Restaurents
+# Getting Started with Restaurants
 
 ## Description
 This project is aimed at creating a full-stack web application with separate folders for the backend using Rails (Ruby 4.0.1) and the frontend using ReactJS (Node.js 25.3.0).
@@ -21,8 +16,6 @@ tenants
   └─ id
   └─ name
   └─ status :integer   # enum: active = 0, inactive = 1, pending = 2
-  └─ created_at
-  └─ updated_at
   └─ has_many :memberships
   └─ has_many :users, through: :memberships
 
@@ -34,8 +27,6 @@ users (global)
   └─ last_name (optional)
   └─ is_active :boolean, default: true
   └─ last_login_time
-  └─ created_at
-  └─ updated_at
   └─ has_many :memberships
   └─ has_many :roles, through: :memberships
 
@@ -44,15 +35,12 @@ memberships (connects user, tenant)
   └─ user_id
   └─ tenant_id
   └─ role           # enum
-  └─ created_at
-  └─ updated_at
 
 menus
   └─ id
   └─ name
   └─ description (optional)
-  └─ created_at
-  └─ updated_at
+  └─ tenant_id
   └─ has_many :items
 
 items
@@ -60,10 +48,13 @@ items
   └─ name
   └─ price
   └─ menu_id
-  └─ unit_id
+  └─ tenant_id
   └─ description (optional)
-  └─ created_at
-  └─ updated_at
+
+dining_tables
+  └─ id
+  └─ tenant_id
+  └─ status :integer     # available=0, occupied=1, reserved=2, cleaning=3
 
 orders
   └─ id
@@ -73,8 +64,6 @@ orders
   └─ total_price
   └─ discount (optional)
   └─ tax (optional)
-  └─ created_at
-  └─ updated_at
   └─ has_many :order_items
 
 order_items
@@ -83,5 +72,3 @@ order_items
   └─ item_id
   └─ quantity
   └─ price                 # at the time of order
-  └─ created_at
-  └─ updated_at

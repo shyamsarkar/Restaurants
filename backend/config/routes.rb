@@ -15,6 +15,7 @@ Rails.application.routes.draw do
       resources :users, only: %i[index show create update destroy]
       resources :menus
       resources :items
+      resources :dining_tables
     end
   end
 end
