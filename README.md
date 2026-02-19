@@ -11,7 +11,7 @@ This project is aimed at creating a full-stack web application with separate fol
 
 
 Database Structure
-
+```
 tenants
   └─ id
   └─ name
@@ -72,3 +72,4 @@ order_items
   └─ item_id
   └─ quantity
   └─ price                 # at the time of order
+```
