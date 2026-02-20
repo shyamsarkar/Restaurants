@@ -12,6 +12,7 @@ class Ability
     can :manage, Menu, tenant_id: tenant.id
     can :manage, Item, tenant_id: tenant.id
     can :manage, DiningTable, tenant_id: tenant.id
+    can :manage, Order, tenant_id: tenant.id
 
     if membership.admin?
       can :manage, User, memberships: { tenant_id: tenant.id }

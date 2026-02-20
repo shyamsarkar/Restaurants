@@ -16,6 +16,11 @@ Rails.application.routes.draw do
       resources :menus
       resources :items
       resources :dining_tables
+      resources :orders, only: %i[create] do
+        member do
+          get :items
+        end
+      end
     end
   end
 end

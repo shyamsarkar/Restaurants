@@ -36,11 +36,6 @@ export const MenuOption: React.FC = () => {
   const [openToastr, setOpenToastr] = useState(false);
   const [editingId, setEditingId] = useState<number | null>(null);
 
-  const fetchMenus = async () => {
-    const menuData = await getMenus();
-    setMenus(menuData);
-  };
-
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
@@ -64,7 +59,23 @@ export const MenuOption: React.FC = () => {
     }
   };
 
+  const handleDelete = async (id: number) => {
+    if (confirm("Are you sure you want to delete this table?")) {
+      try {
+        await deleteMenu(id);
+        fetchMenus();
+      } catch {
+        setOpenToastr(true);
+      }
+    }
+  };
+
   const handleToastrClose = () => setOpenToastr(false);
+
+  const fetchMenus = async () => {
+    const menuData = await getMenus();
+    setMenus(menuData);
+  };
 
   useEffect(() => {
     fetchMenus();
@@ -78,17 +89,6 @@ export const MenuOption: React.FC = () => {
   const handleEdit = (menu: Menu) => {
     setEditingId(menu.id);
     setMenuName(menu.name);
-  };
-
-  const handleDelete = async (id: number) => {
-    if (confirm("Are you sure you want to delete this table?")) {
-      try {
-        await deleteMenu(id);
-        fetchMenus();
-      } catch {
-        setOpenToastr(true);
-      }
-    }
   };
 
   return (

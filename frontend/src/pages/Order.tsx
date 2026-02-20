@@ -15,14 +15,19 @@ import {
   Chip
 } from '@mui/material';
 import { Add, Construction, Delete, Description, Edit, Save, Search } from '@mui/icons-material';
-import { DiningTable, getDiningTables, getMenuItems, MenuItem } from '@/services/api.service';
+import { DiningTable, getDiningTables, getMenuItems, MenuItem, OrderItem, getOrderItems } from '@/services/api.service';
+
+import Snackbar from "@mui/material/Snackbar";
+import { Alert } from "@mui/material";
 
 export const Order = () => {
-  const [selectedTable, setSelectedTable] = useState('Table 1');
+  const [selectedTable, setSelectedTable] = useState<string | null>(null);
   const [diningTables, setDiningTables] = useState<DiningTable[]>([])
   const [menuItems, setMenuItems] = useState<MenuItem[]>([]);
+  const [orderItems, setOrderItems] = useState<OrderItem[]>([]);
   const [searchQuery, setSearchQuery] = useState('');
   const searchInputRef = useRef<HTMLInputElement>(null);
+  const [openToastr, setOpenToastr] = useState(false);
 
   const fetchDiningTables = async () => {
     const tables = await getDiningTables();
@@ -34,6 +39,20 @@ export const Order = () => {
     setMenuItems(items);
   };
 
+  const fetchOrderItems = async (tableId: string | number) => {
+    if (!tableId) return;
+
+    try {
+      const items = await getOrderItems(tableId);
+      setOrderItems(items);
+    } catch (error) {
+      console.error('Failed to fetch order items:', error);
+      setOrderItems([]);
+    }
+  };
+
+  const handleToastrClose = () => setOpenToastr(false);
+
   const handleFocus = () => {
     if (searchInputRef.current) {
       searchInputRef.current.focus();
@@ -41,9 +60,18 @@ export const Order = () => {
   };
 
   const addOrderItem = (itemId: number) => {
+    if (!selectedTable) {
+      setOpenToastr(true);
+      return;
+    }
+
     console.log(`table ${selectedTable} - ItemId: ${itemId} `);
     handleFocus();
   };
+
+  const setItemQuantity = (numb: number | string) => {
+    console.log(numb);
+  }
 
   useEffect(() => {
     fetchDiningTables();
@@ -51,25 +79,9 @@ export const Order = () => {
     searchInputRef.current?.focus()
   }, []);
 
-
-  // const menuItems = Array.from({ length: 10 }, (_, i) => ({
-  //   id: i + 1,
-  //   name: `${['Chicken', 'Prawn', 'Fish', 'Mutton', 'Vegetable'][i % 5]} ${['Masala', 'Curry', 'Fry', 'Biryani', 'Tikka'][Math.floor(i / 2) % 5]}`,
-  //   price: `${400 + (i * 50)}/Pcs`,
-  //   variant: i % 2 === 0 ? 'Full/Half' : 'Regular'
-  // }));
-
-  const orderItems = Array.from({ length: 20 }, (_, i) => ({
-    id: i + 1,
-    name: `${['Prawn', 'Chicken', 'Fish', 'Mutton'][i % 4]} ${['Masala', 'Curry', 'Fry', 'Biryani'][i % 4]}`,
-    quantity: Math.floor(Math.random() * 5) + 1,
-    price: 500,
-    total: (Math.floor(Math.random() * 5) + 1) * 500
-  }));
-
-  const setItemQuantity = (numb: number|string) => {
-    console.log(numb);
-  }
+  useEffect(() => {
+    if (selectedTable) fetchOrderItems(selectedTable);
+  }, [selectedTable]);
 
   return (
     <Box sx={{ height: 'calc(100vh - 30px)' }}>
@@ -246,19 +258,19 @@ export const Order = () => {
                           }
                         }}
                         slotProps={{
-                          input: { style: { textAlign: 'center' }}
+                          input: { style: { textAlign: 'center' } }
                         }}
                       />
                       <Box sx={{ flex: 1, ml: 1.5 }}>
                         <Typography variant="body2" fontWeight="medium" color="text.primary">
-                          {item.name}
+                          {item.price}
                         </Typography>
                         <Typography variant="caption" color="text.secondary">
                           X {item.price}/Pcs
                         </Typography>
                       </Box>
                       <Chip
-                        label={`₹${item.total.toLocaleString()}`}
+                        label={`₹${item.price}`}
                         sx={{
                           bgcolor: '#e5e7eb',
                           color: '#374151',
@@ -370,6 +382,19 @@ export const Order = () => {
           </Box>
         </Grid>
       </Grid>
+
+      {openToastr && (
+        <Snackbar
+          open
+          autoHideDuration={5000}
+          onClose={handleToastrClose}
+          anchorOrigin={{ vertical: "bottom", horizontal: "right" }}
+        >
+          <Alert onClose={handleToastrClose} severity="error" variant="filled">
+            Login failed. Please try again.
+          </Alert>
+        </Snackbar>
+      )}
     </Box>
   );
 };

@@ -2,6 +2,8 @@ class Api::V1::DiningTablesController < ApplicationController
   load_and_authorize_resource
 
   def index
+    with_orders = params[:with_orders] == 'true'
+    @dining_tables = @orders.includes(:orders) if with_orders
     render json: @dining_tables
   end
 

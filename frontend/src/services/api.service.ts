@@ -35,6 +35,16 @@ export interface MenuItem {
   menu_id: string;
 }
 
+export interface OrderItem {
+  id: number;
+  order_id: number;
+  item_id: number;
+  quantity: number;
+  price: number;
+  name: string;
+  sub_total: number;
+}
+
 type CreateMenuItemDto = {
   name: string;
   price: number;
@@ -103,10 +113,11 @@ export const getDashboardData = async () => {
   });
 };
 
-export const getDiningTables = async () => {
+export const getDiningTables = async (withOrders: boolean = false) => {
   return apiClient<DiningTable[]>({
     method: "get",
     url: "/api/v1/dining_tables",
+    params: withOrders ? { with_orders: 'true' } : undefined,
   });
 };
 
@@ -205,9 +216,16 @@ export const deleteMenuItem = async (table_id: number | string) => {
 export const createOrder = async (diningTableId: number) => {
   return apiClient<{ orderId: number }>({
     method: "post",
-    url: "/api/orders",
+    url: "/api/v1/orders",
     data: {
       dining_table_id: diningTableId,
     },
+  });
+};
+
+export const getOrderItems = async (orderId: number | string) => {
+  return apiClient<OrderItem[]>({
+    method: "get",
+    url: `/api/v1/orders/${orderId}/items`,
   });
 };
