@@ -28,7 +28,7 @@ users (global)
   └─ is_active :boolean, default: true
   └─ last_login_time
   └─ has_many :memberships
-  └─ has_many :roles, through: :memberships
+  └─ has_many :tenants, through: :memberships
 
 memberships (connects user, tenant)
   └─ id
