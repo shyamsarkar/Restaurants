@@ -1,23 +1,52 @@
 class Api::V1::DiningTablesController < ApplicationController
-  load_and_authorize_resource
-
   def index
-    with_orders = params[:with_orders] == 'true'
-    @dining_tables = @orders.includes(:orders) if with_orders
-    render json: @dining_tables
+    render json: current_tenant.dining_tables.order(:id)
+  end
+
+  def show
+    render json: dining_table
   end
 
   def create
-    if @dining_table.save
-      render json: @dining_table, status: :created
+    table = current_tenant.dining_tables.new(dining_table_params)
+
+    if table.save
+      render json: table, status: :created
     else
-      render json: { errors: @dining_table.errors.full_messages }, status: :unprocessable_content
+      render json: { errors: table.errors.full_messages }, status: :unprocessable_entity
     end
+  end
+
+  def update
+    if dining_table.update(dining_table_params)
+      render json: dining_table
+    else
+      render json: { errors: dining_table.errors.full_messages }, status: :unprocessable_entity
+    end
+  end
+
+  def destroy
+    dining_table.destroy!
+    head :no_content
+  rescue ActiveRecord::InvalidForeignKey, ActiveRecord::DeleteRestrictionError => e
+    render json: { errors: [e.message] }, status: :unprocessable_entity
   end
 
   private
 
+  def dining_table
+    @dining_table ||= current_tenant.dining_tables.find(params[:id])
+  end
+
+  def current_tenant
+    Current.tenant
+  end
+
   def dining_table_params
-    params.require(:dining_table).permit(:name, :status)
+    if params[:dining_table].present?
+      params.require(:dining_table).permit(:name, :status)
+    else
+      params.permit(:name, :status)
+    end
   end
 end

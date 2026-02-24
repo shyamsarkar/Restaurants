@@ -20,6 +20,7 @@ export interface User {
 export interface DiningTable {
   id: number;
   name: string;
+  status: string;
   created_at: string;
 }
 export interface Menu {
@@ -41,15 +42,25 @@ export interface OrderItem {
   item_id: number;
   quantity: number;
   price: number;
-  name: string;
-  sub_total: number;
+  name?: string;
+  sub_total?: number;
+}
+
+export interface TableOrderItemsResponse {
+  order_id: number | null;
+  order_items: OrderItem[];
 }
 
 type CreateMenuItemDto = {
   name: string;
   price: number;
   menu_id: string;
+  unit?: string;
 };
+
+export interface Id {
+  id: number | string | null;
+}
 
 export const apiClient = async <TResponse>({
   method,
@@ -113,11 +124,10 @@ export const getDashboardData = async () => {
   });
 };
 
-export const getDiningTables = async (withOrders: boolean = false) => {
+export const getDiningTables = async () => {
   return apiClient<DiningTable[]>({
     method: "get",
     url: "/api/v1/dining_tables",
-    params: withOrders ? { with_orders: 'true' } : undefined,
   });
 };
 
@@ -135,7 +145,7 @@ export const updateDiningTable = async (
 ) => {
   return apiClient<DiningTable>({
     method: "patch",
-    url: `/api/dining_tables/${table_id}`,
+    url: `/api/v1/dining_tables/${table_id}`,
     data,
   });
 };
@@ -143,7 +153,7 @@ export const updateDiningTable = async (
 export const deleteDiningTable = async (table_id: number | string) => {
   return apiClient<DiningTable>({
     method: "delete",
-    url: `/api/dining_tables/${table_id}`,
+    url: `/api/v1/dining_tables/${table_id}`,
   });
 };
 
@@ -157,7 +167,7 @@ export const getMenus = async () => {
 export const createMenu = async (data: { name: string }) => {
   return apiClient<Menu>({
     method: "post",
-    url: "/api/menus",
+    url: "/api/v1/menus",
     data,
   });
 };
@@ -168,7 +178,7 @@ export const updateMenu = async (
 ) => {
   return apiClient<Menu>({
     method: "patch",
-    url: `/api/menus/${table_id}`,
+    url: `/api/v1/menus/${table_id}`,
     data,
   });
 };
@@ -176,7 +186,7 @@ export const updateMenu = async (
 export const deleteMenu = async (table_id: number | string) => {
   return apiClient<Menu>({
     method: "delete",
-    url: `/api/menus/${table_id}`,
+    url: `/api/v1/menus/${table_id}`,
   });
 };
 
@@ -190,36 +200,32 @@ export const getMenuItems = async () => {
 export const createMenuItem = async (data: CreateMenuItemDto) => {
   return apiClient<MenuItem>({
     method: "post",
-    url: "/api/items",
-    data,
+    url: "/api/v1/items",
+    data: {
+      ...data,
+      unit: data.unit ?? "piece",
+    },
   });
 };
 
 export const updateMenuItem = async (
   table_id: number | string,
-  data: { name: string }
+  data: { name: string; price: number; menu_id: string; unit?: string }
 ) => {
   return apiClient<MenuItem>({
     method: "patch",
-    url: `/api/items/${table_id}`,
-    data,
+    url: `/api/v1/items/${table_id}`,
+    data: {
+      ...data,
+      unit: data.unit ?? "piece",
+    },
   });
 };
 
 export const deleteMenuItem = async (table_id: number | string) => {
   return apiClient<MenuItem>({
     method: "delete",
-    url: `/api/items/${table_id}`,
-  });
-};
-
-export const createOrder = async (diningTableId: number) => {
-  return apiClient<{ orderId: number }>({
-    method: "post",
-    url: "/api/v1/orders",
-    data: {
-      dining_table_id: diningTableId,
-    },
+    url: `/api/v1/items/${table_id}`,
   });
 };
 
@@ -227,5 +233,42 @@ export const getOrderItems = async (orderId: number | string) => {
   return apiClient<OrderItem[]>({
     method: "get",
     url: `/api/v1/orders/${orderId}/items`,
+  });
+};
+
+export const getOrderItemsByDiningTable = async (diningTableId: number | string) => {
+  return apiClient<TableOrderItemsResponse>({
+    method: "get",
+    url: "/api/v1/order_items",
+    params: { dining_table_id: diningTableId },
+  });
+};
+
+export const addOrderItem = async (
+  diningTableId: number | string | null,
+  itemId: number | string | null,
+  price: number
+) => {
+  if (!diningTableId || !itemId) {
+    throw new Error("Invalid dining table or item.");
+  }
+
+  return apiClient<OrderItem>({
+    method: "post",
+    url: "/api/v1/order_items",
+    data: {
+      dining_table_id: diningTableId,
+      order_item: {
+        item_id: itemId,
+        price,
+      },
+    },
+  });
+};
+
+export const deleteOrderItem = async (orderItemId: number | string) => {
+  return apiClient<{ id: number; order_id: number; total_price: number }>({
+    method: "delete",
+    url: `/api/v1/order_items/${orderItemId}`,
   });
 };

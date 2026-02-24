@@ -6,7 +6,7 @@ class Order < ApplicationRecord
   belongs_to :dining_table, optional: true
   has_many :order_items, dependent: :destroy
 
-  enum :status, { pending: 0, preparing: 1, completed: 2, cancelled: 3 }
+  enum :status, { pending: 0, preparing: 1, ready: 2, completed: 3, cancelled: 4 }
 
   validates :tenant_id, :user_id, :status, presence: true
   validates :total_price, numericality: { greater_than_or_equal_to: 0 }

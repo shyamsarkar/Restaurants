@@ -12,22 +12,36 @@ import {
   InputAdornment,
   IconButton,
   Paper,
-  Chip
+  Chip,
+  CircularProgress
 } from '@mui/material';
-import { Add, Construction, Delete, Description, Edit, Save, Search } from '@mui/icons-material';
-import { DiningTable, getDiningTables, getMenuItems, MenuItem, OrderItem, getOrderItems } from '@/services/api.service';
-
-import Snackbar from "@mui/material/Snackbar";
-import { Alert } from "@mui/material";
+import { Add, Close, Construction, Delete, Description, Edit, Save, Search } from '@mui/icons-material';
+import {
+  DiningTable,
+  getDiningTables,
+  getMenuItems,
+  MenuItem,
+  OrderItem,
+  addOrderItem,
+  getOrderItemsByDiningTable,
+  deleteOrderItem
+} from '@/services/api.service';
+import { useToast } from '@/contexts/ToastContext';
 
 export const Order = () => {
-  const [selectedTable, setSelectedTable] = useState<string | null>(null);
+  const [selectedTable, setSelectedTable] = useState<DiningTable | null>(null);
   const [diningTables, setDiningTables] = useState<DiningTable[]>([])
   const [menuItems, setMenuItems] = useState<MenuItem[]>([]);
   const [orderItems, setOrderItems] = useState<OrderItem[]>([]);
   const [searchQuery, setSearchQuery] = useState('');
   const searchInputRef = useRef<HTMLInputElement>(null);
-  const [openToastr, setOpenToastr] = useState(false);
+  const [currentOrderId, setCurrentOrderId] = useState<number | null>(null);
+  const [isAddingItem, setIsAddingItem] = useState(false);
+  const [addItemError, setAddItemError] = useState<string | null>(null);
+  const [isFetchingOrderItems, setIsFetchingOrderItems] = useState(false);
+  const [fetchOrderItemsError, setFetchOrderItemsError] = useState<string | null>(null);
+  const [deletingOrderItemId, setDeletingOrderItemId] = useState<number | null>(null);
+  const { showToast } = useToast();
 
   const fetchDiningTables = async () => {
     const tables = await getDiningTables();
@@ -39,19 +53,23 @@ export const Order = () => {
     setMenuItems(items);
   };
 
-  const fetchOrderItems = async (tableId: string | number) => {
-    if (!tableId) return;
+  const fetchOrderItemsForTable = async (tableId: number) => {
+    setIsFetchingOrderItems(true);
+    setFetchOrderItemsError(null);
 
     try {
-      const items = await getOrderItems(tableId);
-      setOrderItems(items);
+      const response = await getOrderItemsByDiningTable(tableId);
+      setCurrentOrderId(response.order_id);
+      setOrderItems(response.order_items);
     } catch (error) {
       console.error('Failed to fetch order items:', error);
+      setCurrentOrderId(null);
       setOrderItems([]);
+      setFetchOrderItemsError('Failed to fetch order items.');
+    } finally {
+      setIsFetchingOrderItems(false);
     }
   };
-
-  const handleToastrClose = () => setOpenToastr(false);
 
   const handleFocus = () => {
     if (searchInputRef.current) {
@@ -59,14 +77,60 @@ export const Order = () => {
     }
   };
 
-  const addOrderItem = (itemId: number) => {
+  const getOrderItemName = (orderItem: OrderItem) => {
+    return orderItem.name || menuItems.find((menuItem) => menuItem.id === orderItem.item_id)?.name || `Item #${orderItem.item_id}`;
+  };
+
+  const handleAddOrderItem = async (item: MenuItem) => {
     if (!selectedTable) {
-      setOpenToastr(true);
+      showToast('Please select a table first.', 'error');
       return;
     }
 
-    console.log(`table ${selectedTable} - ItemId: ${itemId} `);
-    handleFocus();
+    setIsAddingItem(true);
+    setAddItemError(null);
+
+    try {
+      const createdOrUpdatedOrderItem = await addOrderItem(selectedTable.id, item.id, item.price);
+      setCurrentOrderId((prev) => prev ?? createdOrUpdatedOrderItem.order_id);
+      setOrderItems((prev) => {
+        const existingIndex = prev.findIndex((orderItem) => orderItem.id === createdOrUpdatedOrderItem.id);
+        if (existingIndex === -1) {
+          return [...prev, createdOrUpdatedOrderItem];
+        }
+
+        const next = [...prev];
+        next[existingIndex] = createdOrUpdatedOrderItem;
+        return next;
+      });
+      handleFocus();
+    } catch (error) {
+      console.error('Failed to add item:', error);
+      setAddItemError('Failed to add item. Please try again.');
+      showToast('Failed to add item. Please try again.', 'error');
+    } finally {
+      setIsAddingItem(false);
+    }
+  };
+
+  const handleDeleteOrderItem = async (orderItemId: number) => {
+    setDeletingOrderItemId(orderItemId);
+    setAddItemError(null);
+
+    try {
+      await deleteOrderItem(orderItemId);
+      const nextItems = orderItems.filter((orderItem) => orderItem.id !== orderItemId);
+      setOrderItems(nextItems);
+      if (nextItems.length === 0) {
+        setCurrentOrderId(null);
+      }
+    } catch (error) {
+      console.error('Failed to delete order item:', error);
+      setAddItemError('Failed to delete item. Please try again.');
+      showToast('Failed to delete item. Please try again.', 'error');
+    } finally {
+      setDeletingOrderItemId(null);
+    }
   };
 
   const setItemQuantity = (numb: number | string) => {
@@ -80,8 +144,25 @@ export const Order = () => {
   }, []);
 
   useEffect(() => {
-    if (selectedTable) fetchOrderItems(selectedTable);
-  }, [selectedTable]);
+    setCurrentOrderId(null);
+    setOrderItems([]);
+    setAddItemError(null);
+    setFetchOrderItemsError(null);
+    if (selectedTable?.id) {
+      fetchOrderItemsForTable(selectedTable.id);
+    }
+  }, [selectedTable?.id]);
+
+  const statusPriority: Record<string, number> = {
+    occupied: 0,
+    reserved: 1,
+    cleaning: 2,
+    available: 3
+  };
+
+  const sortedDiningTables = [...diningTables].sort((a, b) => {
+    return (statusPriority[a.status] ?? 99) - (statusPriority[b.status] ?? 99);
+  });
 
   return (
     <Box sx={{ height: 'calc(100vh - 30px)' }}>
@@ -100,22 +181,22 @@ export const Order = () => {
             }}
           >
             <Box sx={{ display: 'flex', flexDirection: 'column', gap: 1 }}>
-              {diningTables.map((table) => (
+              {sortedDiningTables.map((table) => (
                 <Button
                   key={table.id}
                   variant={'contained'}
-                  color={'primary'}
+                  color={table.status === 'available' ? 'primary' : table.status === 'occupied' ? 'success' : 'warning'}
                   fullWidth
                   size="small"
                   sx={{
-                    py: 1.5,
+                    py: 0.75,
                     fontWeight: 'medium',
                     transition: 'all 0.2s ease-in-out',
                     '&:hover': {
                       transform: 'scale(1.05)',
                     }
                   }}
-                  onClick={() => setSelectedTable(table.id.toString())}
+                  onClick={() => setSelectedTable(table)}
                 >
                   {table.name}
                 </Button>
@@ -186,7 +267,8 @@ export const Order = () => {
                             </Typography>
                           </Box>
                           <IconButton
-                            onClick={() => addOrderItem(item.id)}
+                            onClick={() => handleAddOrderItem(item)}
+                            disabled={isAddingItem}
                             size="small"
                             sx={{
                               bgcolor: '#2563eb',
@@ -218,11 +300,40 @@ export const Order = () => {
             display: 'flex',
             flexDirection: 'column'
           }}>
-            <Box sx={{ mb: 2 }}>
+            <Box sx={{ mb: 2, display: 'flex', justifyContent: 'space-between' }}>
               <Typography variant="h5" fontWeight="semibold" color="text.primary">
-                Table: {selectedTable}
+                {selectedTable?.name}
+              </Typography>
+              <Typography variant="h5" fontWeight="semibold" color="text.primary">
+                Order: {currentOrderId ?? ''}
               </Typography>
             </Box>
+            {addItemError && (
+              <Typography variant="body2" color="error" sx={{ mb: 1 }}>
+                {addItemError}
+              </Typography>
+            )}
+            {fetchOrderItemsError && (
+              <Typography variant="body2" color="error" sx={{ mb: 1 }}>
+                {fetchOrderItemsError}
+              </Typography>
+            )}
+            {isFetchingOrderItems && (
+              <Box sx={{ display: 'flex', alignItems: 'center', gap: 1, mb: 1 }}>
+                <CircularProgress size={16} />
+                <Typography variant="body2" color="text.secondary">
+                  Loading order items...
+                </Typography>
+              </Box>
+            )}
+            {isAddingItem && (
+              <Box sx={{ display: 'flex', alignItems: 'center', gap: 1, mb: 1 }}>
+                <CircularProgress size={16} />
+                <Typography variant="body2" color="text.secondary">
+                  Adding item...
+                </Typography>
+              </Box>
+            )}
 
             {/* Order Items List */}
             <Card sx={{ flex: 1, mb: 2, overflow: 'hidden' }}>
@@ -261,12 +372,46 @@ export const Order = () => {
                           input: { style: { textAlign: 'center' } }
                         }}
                       />
+                      <Typography variant="body2" fontWeight="medium" color="text.primary">
+                        X
+                      </Typography>
                       <Box sx={{ flex: 1, ml: 1.5 }}>
-                        <Typography variant="body2" fontWeight="medium" color="text.primary">
-                          {item.price}
+                        <Typography variant="body1" fontWeight="medium" color="text.primary">
+                          {getOrderItemName(item)}
                         </Typography>
+                      </Box>
+                      <Box sx={{ ml: 1.5, display: 'flex' }}>
+                        <TextField
+                          type="text"
+                          value={item.price}
+                          size="small"
+                          onChange={(e) => {
+                            const val = e.target.value;
+                            // Allow only digits and ensure >= 1
+                            if (/^\d*$/.test(val)) {
+                              const num = parseInt(val, 10);
+                              if (val === '' || num >= 1) {
+                                // Update your state or call a function here
+                                setItemQuantity(num || ''); // handle '' as empty or reset
+                              }
+                            }
+                          }}
+                          sx={{
+                            width: 100,
+                            '& .MuiOutlinedInput-root': {
+                              bgcolor: '#f3f4f6',
+                              '& input': { py: 0.5 }
+                            }
+                          }}
+                          slotProps={{
+                            input: { style: { textAlign: 'center' } }
+                          }}
+                        />
+                      </Box>
+
+                      <Box sx={{ flex: 1, ml: 1.5 }}>
                         <Typography variant="caption" color="text.secondary">
-                          X {item.price}/Pcs
+                          {item.price}/Pcs
                         </Typography>
                       </Box>
                       <Chip
@@ -280,6 +425,8 @@ export const Order = () => {
                       />
                       <Box sx={{ display: 'flex', ml: 1, gap: 0.5 }}>
                         <IconButton
+                          onClick={() => handleDeleteOrderItem(item.id)}
+                          disabled={deletingOrderItemId === item.id}
                           size="small"
                           sx={{
                             width: 32,
@@ -297,7 +444,7 @@ export const Order = () => {
                             '&:hover': { bgcolor: '#fee2e2', color: '#dc2626' }
                           }}
                         >
-                          <Delete />
+                          {deletingOrderItemId === item.id ? <CircularProgress size={14} /> : <Delete />}
                         </IconButton>
                       </Box>
                     </Box>
@@ -370,10 +517,10 @@ export const Order = () => {
                     <Button
                       fullWidth
                       variant="contained"
-                      startIcon={<Delete />}
+                      startIcon={<Close />}
                       color="error"
                     >
-                      Delete
+                      Cancel
                     </Button>
                   </Grid>
                 </Grid>
@@ -382,19 +529,6 @@ export const Order = () => {
           </Box>
         </Grid>
       </Grid>
-
-      {openToastr && (
-        <Snackbar
-          open
-          autoHideDuration={5000}
-          onClose={handleToastrClose}
-          anchorOrigin={{ vertical: "bottom", horizontal: "right" }}
-        >
-          <Alert onClose={handleToastrClose} severity="error" variant="filled">
-            Login failed. Please try again.
-          </Alert>
-        </Snackbar>
-      )}
     </Box>
   );
 };
