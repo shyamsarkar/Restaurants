@@ -10,11 +10,33 @@ interface ApiRequestParams {
 }
 export interface User {
   id: number;
-  name: string;
   email: string;
-  role: string;
-  status: string;
-  avatar: string;
+  first_name: string | null;
+  last_name: string | null;
+  is_active: boolean;
+  role: "admin" | "manager" | "cashier" | "waiter" | null;
+  created_at?: string;
+  updated_at?: string;
+}
+
+export interface CreateUserPayload {
+  email: string;
+  first_name: string;
+  last_name: string;
+  is_active: boolean;
+  role: "admin" | "manager" | "cashier" | "waiter";
+  password: string;
+  password_confirmation: string;
+}
+
+export interface UpdateUserPayload {
+  email: string;
+  first_name: string;
+  last_name: string;
+  is_active: boolean;
+  role: "admin" | "manager" | "cashier" | "waiter";
+  password?: string;
+  password_confirmation?: string;
 }
 
 export interface DiningTable {
@@ -109,6 +131,32 @@ export const getUsers = async () => {
     url: "/api/v1/users",
   })
 }
+
+export const createUser = async (data: CreateUserPayload) => {
+  return apiClient<User>({
+    method: "post",
+    url: "/api/v1/users",
+    data,
+  });
+};
+
+export const updateUser = async (
+  userId: number | string,
+  data: UpdateUserPayload
+) => {
+  return apiClient<User>({
+    method: "patch",
+    url: `/api/v1/users/${userId}`,
+    data,
+  });
+};
+
+export const deleteUser = async (userId: number | string) => {
+  return apiClient<void>({
+    method: "delete",
+    url: `/api/v1/users/${userId}`,
+  });
+};
 
 export const getTenants = async () => {
   return apiClient<{ id: string, name: string }[]>({
