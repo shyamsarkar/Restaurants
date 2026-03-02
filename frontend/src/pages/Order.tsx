@@ -24,7 +24,8 @@ import {
   OrderItem,
   addOrderItem,
   getOrderItemsByDiningTable,
-  deleteOrderItem
+  deleteOrderItem,
+  updateOrderItem
 } from '@/services/api.service';
 import { useToast } from '@/contexts/ToastContext';
 
@@ -41,6 +42,7 @@ export const Order = () => {
   const [isFetchingOrderItems, setIsFetchingOrderItems] = useState(false);
   const [fetchOrderItemsError, setFetchOrderItemsError] = useState<string | null>(null);
   const [deletingOrderItemId, setDeletingOrderItemId] = useState<number | null>(null);
+  const [updatingOrderItemId, setUpdatingOrderItemId] = useState<number | null>(null);
   const { showToast } = useToast();
 
   const fetchDiningTables = async () => {
@@ -135,9 +137,37 @@ export const Order = () => {
     }
   };
 
-  const setItemQuantity = (numb: number | string) => {
-    console.log(numb);
-  }
+  const handleUpdateOrderItemQuantity = async (orderItemId: number, quantity: number) => {
+    if (quantity < 1) return;
+
+    const currentItem = orderItems.find((orderItem) => orderItem.id === orderItemId);
+    if (!currentItem || currentItem.quantity === quantity) return;
+
+    const previousQuantity = currentItem.quantity;
+    setUpdatingOrderItemId(orderItemId);
+    setAddItemError(null);
+    setOrderItems((prev) => prev.map((orderItem) => (
+      orderItem.id === orderItemId ? { ...orderItem, quantity } : orderItem
+    )));
+
+    try {
+      const updatedOrderItem = await updateOrderItem(orderItemId, { quantity });
+      setOrderItems((prev) => prev.map((orderItem) => (
+        orderItem.id === orderItemId
+          ? { ...orderItem, quantity: updatedOrderItem.quantity, price: Number(updatedOrderItem.price) }
+          : orderItem
+      )));
+    } catch (error) {
+      console.error('Failed to update order item quantity:', error);
+      setOrderItems((prev) => prev.map((orderItem) => (
+        orderItem.id === orderItemId ? { ...orderItem, quantity: previousQuantity } : orderItem
+      )));
+      setAddItemError('Failed to update item quantity. Please try again.');
+      showToast('Failed to update item quantity. Please try again.', 'error');
+    } finally {
+      setUpdatingOrderItemId(null);
+    }
+  };
 
   useEffect(() => {
     fetchDiningTables();
@@ -174,6 +204,10 @@ export const Order = () => {
   const sortedDiningTables = [...diningTables].sort((a, b) => {
     return (statusPriority[a.status] ?? 99) - (statusPriority[b.status] ?? 99);
   });
+
+  const totalItems = orderItems.length;
+  const totalQuantity = orderItems.reduce((sum, orderItem) => sum + orderItem.quantity, 0);
+  const subtotal = orderItems.reduce((sum, orderItem) => sum + (Number(orderItem.price) * orderItem.quantity), 0);
 
   return (
     <Box sx={{ height: 'calc(100vh - 30px)' }}>
@@ -388,15 +422,14 @@ export const Order = () => {
                         type="text"
                         value={item.quantity}
                         size="small"
+                        disabled={updatingOrderItemId === item.id}
                         onChange={(e) => {
                           const val = e.target.value;
-                          // Allow only digits and ensure >= 1
-                          if (/^\d*$/.test(val)) {
-                            const num = parseInt(val, 10);
-                            if (val === '' || num >= 1) {
-                              // Update your state or call a function here
-                              setItemQuantity(num || ''); // handle '' as empty or reset
-                            }
+                          if (!/^\d*$/.test(val) || val === '') return;
+
+                          const quantity = Number(val);
+                          if (!Number.isNaN(quantity) && quantity >= 1) {
+                            void handleUpdateOrderItemQuantity(item.id, quantity);
                           }
                         }}
                         sx={{
@@ -471,26 +504,26 @@ export const Order = () => {
                 <Grid container spacing={2} textAlign="center">
                   <Grid size={4}>
                     <Typography variant="body2" color="text.secondary">
-                      Food
+                      Items
                     </Typography>
                     <Typography variant="h6" fontWeight="semibold">
-                      ₹15,480
+                      {totalItems}
                     </Typography>
                   </Grid>
                   <Grid size={4}>
                     <Typography variant="body2" color="text.secondary">
-                      Beverages
+                      Qty
                     </Typography>
                     <Typography variant="h6" fontWeight="semibold">
-                      ₹2,250
+                      {totalQuantity}
                     </Typography>
                   </Grid>
                   <Grid size={4}>
                     <Typography variant="body2" color="text.secondary">
-                      Grand Total
+                      Payable
                     </Typography>
                     <Typography variant="h5" fontWeight="bold" color="#16a34a">
-                      ₹17,730
+                      ₹{subtotal.toFixed(2)}
                     </Typography>
                   </Grid>
                 </Grid>

@@ -16,7 +16,7 @@ Rails.application.routes.draw do
       resources :menus
       resources :items
       resources :dining_tables
-      resources :order_items, only: %i[index create destroy]
+      resources :order_items, only: %i[index create update destroy]
       resources :orders, only: %i[create] do
         resources :order_items, only: %i[update destroy]
         member do

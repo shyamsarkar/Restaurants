@@ -53,7 +53,26 @@ class Api::V1::OrderItemsController < ApplicationController
     render json: { error: e.record.errors.full_messages }, status: :unprocessable_entity
   end
 
-  def update; end
+  def update
+    order_item = nil
+    total_price = nil
+
+    ActiveRecord::Base.transaction do
+      order_item = OrderItem.joins(:order)
+                            .where(orders: { tenant_id: current_tenant.id, status: Order.statuses[:pending] })
+                            .find(params[:id])
+
+      order_item.update!(update_params)
+      total_price = order_item.order.order_items.sum('quantity * price')
+      order_item.order.update!(total_price: total_price)
+    end
+
+    render json: serialize_order_item(order_item).merge(total_price: total_price), status: :ok
+  rescue ActiveRecord::RecordNotFound => e
+    render json: { error: e.message }, status: :not_found
+  rescue ActiveRecord::RecordInvalid => e
+    render json: { error: e.record.errors.full_messages }, status: :unprocessable_entity
+  end
 
   def destroy
     deleted_id = nil
@@ -115,5 +134,9 @@ class Api::V1::OrderItemsController < ApplicationController
 
   def create_params
     params.permit(:dining_table_id, order_item: %i[item_id price])
+  end
+
+  def update_params
+    params.permit(:quantity)
   end
 end

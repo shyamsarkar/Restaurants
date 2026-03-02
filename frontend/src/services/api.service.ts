@@ -320,3 +320,14 @@ export const deleteOrderItem = async (orderItemId: number | string) => {
     url: `/api/v1/order_items/${orderItemId}`,
   });
 };
+
+export const updateOrderItem = async (
+  orderItemId: number | string,
+  data: { quantity: number }
+) => {
+  return apiClient<OrderItem & { total_price: number }>({
+    method: "patch",
+    url: `/api/v1/order_items/${orderItemId}`,
+    data,
+  });
+};
