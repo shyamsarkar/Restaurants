@@ -103,6 +103,7 @@ export const Order = () => {
         next[existingIndex] = createdOrUpdatedOrderItem;
         return next;
       });
+      await fetchDiningTables();
       handleFocus();
     } catch (error) {
       console.error('Failed to add item:', error);
@@ -124,6 +125,7 @@ export const Order = () => {
       if (nextItems.length === 0) {
         setCurrentOrderId(null);
       }
+      await fetchDiningTables();
     } catch (error) {
       console.error('Failed to delete order item:', error);
       setAddItemError('Failed to delete item. Please try again.');
@@ -152,6 +154,15 @@ export const Order = () => {
       fetchOrderItemsForTable(selectedTable.id);
     }
   }, [selectedTable?.id]);
+
+  useEffect(() => {
+    if (!selectedTable) return;
+
+    const latestSelectedTable = diningTables.find((table) => table.id === selectedTable.id);
+    if (latestSelectedTable && latestSelectedTable !== selectedTable) {
+      setSelectedTable(latestSelectedTable);
+    }
+  }, [diningTables, selectedTable]);
 
   const statusPriority: Record<string, number> = {
     occupied: 0,
@@ -213,7 +224,7 @@ export const Order = () => {
               <CardContent sx={{ p: 0, pb: '0 !important' }}>
                 <TextField
                   fullWidth
-                  ref={searchInputRef}
+                  inputRef={searchInputRef}
                   placeholder="Search Item"
                   value={searchQuery}
                   onChange={(e) => setSearchQuery(e.target.value)}
@@ -338,6 +349,33 @@ export const Order = () => {
             {/* Order Items List */}
             <Card sx={{ flex: 1, mb: 2, overflow: 'hidden' }}>
               <Box sx={{ height: '100%', overflowY: 'auto' }}>
+                <Box
+                  sx={{
+                    display: 'flex',
+                    alignItems: 'center',
+                    px: 1.5,
+                    py: 1,
+                    bgcolor: '#f8fafc',
+                    borderBottom: 1,
+                    borderColor: '#e5e7eb'
+                  }}
+                >
+                  <Typography variant="caption" sx={{ width: 72, fontWeight: 700, color: 'text.secondary' }}>
+                    Qty
+                  </Typography>
+                  <Typography variant="caption" sx={{ flex: 1, fontWeight: 700, color: 'text.secondary' }}>
+                    Item
+                  </Typography>
+                  <Typography variant="caption" sx={{ width: 110, textAlign: 'right', fontWeight: 700, color: 'text.secondary' }}>
+                    Price
+                  </Typography>
+                  <Typography variant="caption" sx={{ width: 110, textAlign: 'right', fontWeight: 700, color: 'text.secondary' }}>
+                    Total
+                  </Typography>
+                  <Typography variant="caption" sx={{ width: 76, textAlign: 'center', fontWeight: 700, color: 'text.secondary' }}>
+                    Actions
+                  </Typography>
+                </Box>
                 {orderItems.map((item, index) => (
                   <Box key={item.id}>
                     <Box sx={{
@@ -362,7 +400,7 @@ export const Order = () => {
                           }
                         }}
                         sx={{
-                          width: 64,
+                          width: 60,
                           '& .MuiOutlinedInput-root': {
                             bgcolor: '#f3f4f6',
                             '& input': { py: 0.5 }
@@ -375,58 +413,29 @@ export const Order = () => {
                       <Typography variant="body2" fontWeight="medium" color="text.primary">
                         X
                       </Typography>
-                      <Box sx={{ flex: 1, ml: 1.5 }}>
-                        <Typography variant="body1" fontWeight="medium" color="text.primary">
+                      <Box sx={{ flex: 1, ml: 1.5, pr: 1 }}>
+                        <Typography variant="body2" fontWeight="medium" color="text.primary">
                           {getOrderItemName(item)}
                         </Typography>
                       </Box>
-                      <Box sx={{ ml: 1.5, display: 'flex' }}>
-                        <TextField
-                          type="text"
-                          value={item.price}
-                          size="small"
-                          onChange={(e) => {
-                            const val = e.target.value;
-                            // Allow only digits and ensure >= 1
-                            if (/^\d*$/.test(val)) {
-                              const num = parseInt(val, 10);
-                              if (val === '' || num >= 1) {
-                                // Update your state or call a function here
-                                setItemQuantity(num || ''); // handle '' as empty or reset
-                              }
-                            }
-                          }}
+                      <Box sx={{ width: 110, display: 'flex', justifyContent: 'flex-end' }}>
+                        <Typography variant="body2" color="text.secondary">
+                          ₹{item.price}
+                        </Typography>
+                      </Box>
+                      <Box sx={{ width: 110, display: 'flex', justifyContent: 'flex-end' }}>
+                        <Chip
+                          label={`₹${(Number(item.price) * item.quantity).toFixed(2)}`}
                           sx={{
-                            width: 100,
-                            '& .MuiOutlinedInput-root': {
-                              bgcolor: '#f3f4f6',
-                              '& input': { py: 0.5 }
-                            }
-                          }}
-                          slotProps={{
-                            input: { style: { textAlign: 'center' } }
+                            bgcolor: '#e5e7eb',
+                            color: '#374151',
+                            fontWeight: 'medium',
+                            minWidth: 90
                           }}
                         />
                       </Box>
-
-                      <Box sx={{ flex: 1, ml: 1.5 }}>
-                        <Typography variant="caption" color="text.secondary">
-                          {item.price}/Pcs
-                        </Typography>
-                      </Box>
-                      <Chip
-                        label={`₹${item.price}`}
-                        sx={{
-                          bgcolor: '#e5e7eb',
-                          color: '#374151',
-                          fontWeight: 'medium',
-                          minWidth: 80
-                        }}
-                      />
-                      <Box sx={{ display: 'flex', ml: 1, gap: 0.5 }}>
+                      <Box sx={{ display: 'flex', justifyContent: 'center', width: 76, ml: 1, gap: 0.5 }}>
                         <IconButton
-                          onClick={() => handleDeleteOrderItem(item.id)}
-                          disabled={deletingOrderItemId === item.id}
                           size="small"
                           sx={{
                             width: 32,
@@ -437,6 +446,8 @@ export const Order = () => {
                           <Edit />
                         </IconButton>
                         <IconButton
+                          onClick={() => handleDeleteOrderItem(item.id)}
+                          disabled={deletingOrderItemId === item.id}
                           size="small"
                           sx={{
                             width: 32,

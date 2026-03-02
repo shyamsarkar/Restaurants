@@ -17,11 +17,13 @@ class Api::V1::OrderItemsController < ApplicationController
 
   def create
     order_item = nil
+    dining_table = nil
 
     ActiveRecord::Base.transaction do
+      dining_table = current_tenant.dining_tables.find(create_params[:dining_table_id])
       item = current_tenant.items.find(create_params.dig(:order_item, :item_id))
 
-      order = current_tenant.orders.find_or_create_by!(dining_table_id: create_params[:dining_table_id],
+      order = current_tenant.orders.find_or_create_by!(dining_table_id: dining_table.id,
                                                        status: :pending) do |new_order|
         new_order.user = current_user
         new_order.total_price = 0
@@ -41,6 +43,7 @@ class Api::V1::OrderItemsController < ApplicationController
 
       total_price = order.order_items.sum('quantity * price')
       order.update!(total_price: total_price)
+      dining_table.update!(status: :occupied) unless dining_table.occupied?
     end
 
     render json: serialize_order_item(order_item), status: :created
@@ -56,6 +59,7 @@ class Api::V1::OrderItemsController < ApplicationController
     deleted_id = nil
     order_id = nil
     total_price = nil
+    dining_table_id = nil
 
     ActiveRecord::Base.transaction do
       order_item = OrderItem.joins(:order)
@@ -64,10 +68,25 @@ class Api::V1::OrderItemsController < ApplicationController
       order = order_item.order
       deleted_id = order_item.id
       order_id = order.id
+      dining_table_id = order.dining_table_id
 
       order_item.destroy!
       total_price = order.order_items.sum('quantity * price')
       order.update!(total_price: total_price)
+
+      next unless dining_table_id.present?
+
+      has_pending_items = OrderItem.joins(:order)
+                                   .where(orders: {
+                                            tenant_id: current_tenant.id,
+                                            dining_table_id: dining_table_id,
+                                            status: Order.statuses[:pending]
+                                          })
+                                   .exists?
+
+      unless has_pending_items
+        current_tenant.dining_tables.find(dining_table_id).update!(status: :available)
+      end
     end
 
     render json: { id: deleted_id, order_id: order_id, total_price: total_price }, status: :ok
