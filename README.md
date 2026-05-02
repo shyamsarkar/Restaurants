@@ -1,7 +1,7 @@
 # Getting Started with Restaurants
 
 ## Description
-This project is aimed at creating a full-stack web application with separate folders for the backend using Rails (Ruby 4.0.1) and the frontend using ReactJS (Node.js 25.3.0).
+This project is aimed at creating a full-stack web application with separate folders for the backend using Rails (Ruby 4.0.3) and the frontend using ReactJS (Node.js 25.3.0).
 
 ## Usage
 - Once both the backend and frontend servers are running, you can access the application at `http://localhost:5173`.
