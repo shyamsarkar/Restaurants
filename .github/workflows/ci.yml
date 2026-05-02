@@ -1,0 +1,77 @@
+name: CI + Deploy
+
+on:
+  pull_request:
+    branches: [ main ]
+  push:
+    branches: [ main ]
+
+jobs:
+  test:
+    name: Run RSpec Tests
+    runs-on: ubuntu-latest
+    services:
+      postgres:
+        image: postgres:latest
+        ports:
+          - 5432:5432
+        env:
+          POSTGRES_DB: restaurants
+          POSTGRES_USER: postgres
+          POSTGRES_PASSWORD: postgres
+        options: --health-cmd pg_isready --health-interval 10s --health-timeout 5s --health-retries 5
+    env:
+      DB_HOST_PSQL: localhost
+      DB_USER_PSQL: postgres
+      DB_PASS_PSQL: postgres
+      DB_NAME_PSQL: restaurants
+
+    steps:
+      - name: Install packages
+        run: sudo apt-get update && sudo apt-get install -y libvips
+
+      - name: Checkout code
+        uses: actions/checkout@v5
+
+      - name: Set up Ruby
+        uses: ruby/setup-ruby@v1
+        with:
+          ruby-version: 4.0.3
+          bundler-cache: true
+          working-directory: backend
+
+      - name: Setup DB
+        working-directory: backend
+        run: |
+          bundle exec rails db:create RAILS_ENV=test
+          bundle exec rails db:migrate RAILS_ENV=test
+
+      - name: Run RSpec
+        working-directory: backend
+        run: bundle exec rspec
+
+  deploy:
+    needs: test
+    if: github.event_name == 'push'
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Deploy to EC2
+        uses: appleboy/ssh-action@v1.0.3
+        with:
+          host: ${{ secrets.EC2_HOST }}
+          username: ${{ secrets.EC2_USER }}
+          key: ${{ secrets.EC2_SSH_KEY }}
+          script: |
+            set -e
+
+            export PATH="$HOME/.rbenv/bin:$PATH"
+            eval "$(rbenv init -)"
+
+            cd /home/ubuntu/myapp
+
+            git pull origin main
+            bundle install
+            RAILS_ENV=production bundle exec rails db:migrate
+            RAILS_ENV=production bundle exec rails assets:precompile
+            sudo systemctl restart puma
